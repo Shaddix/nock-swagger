@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "workspaces": [
+    "examples/*",
+    "src"
+  ],
+  "nohoist": [],
+  "scripts": {
+    "do-publish": "yarn workspace nock-swagger publish",
+    "start": "yarn workspace pet-client start",
+    "typecheck": "yarn workspace nock-swagger tsc && yarn workspace pet-client tsc",
+    "generate-react-query": "yarn workspace pet-client generate-react-query",
+    "generate-nock": "yarn workspace pet-client generate-nock"
+  }
+}

@@ -1,0 +1,16 @@
+import nock from 'nock';
+
+let _baseUrl = '';
+/*
+Returns the base URL for http requests
+*/
+export function getBaseUrl(): string {
+  return _baseUrl;
+}
+
+/*
+Sets the base URL for http requests
+*/
+export function setBaseUrl(baseUrl: string) {
+  _baseUrl = baseUrl;
+}

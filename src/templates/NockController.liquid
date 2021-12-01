@@ -1,0 +1,54 @@
+
+{%- if HasOperations -%}
+{%- assign NockClassName = Class | prepend: 'Qqqqqq' | slice: 0, Class.size | append: "Nock" | slice: 6, 1000 -%}
+
+{%- for operation in Operations -%}
+{%- if operation.HttpMethodUpper == 'Get' -%}
+{%- if operation.Parameters.size > 0 -%}
+
+{%- assign firstLetter = operation.ActualOperationName | slice: 0, 1 | upcase -%}
+{%- assign parameterClassName = operation.ActualOperationName | append: 'q' | slice: 1, operation.ActualOperationName.size | prepend: firstLetter | slice: 0, operation.ActualOperationName.size | append: NockClassName | append: 'Parameters' -%}
+type {{ parameterClassName }} = {
+  {%- for parameter in operation.Parameters -%}
+  {{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }};
+  {%- endfor -%}
+};
+
+{%- endif -%}
+{%- endif -%}
+{%- endfor -%}
+
+export const {{ NockClassName }} = {
+{%- for operation in Operations -%}
+{%- if operation.HttpMethodUpper == 'Get' or operation.HttpMethodUpper == 'Post' or operation.HttpMethodUpper == 'Put' -%}
+{% assign ResultType = operation.ResultType %}
+
+  {% if operation.HttpMethodUpper == 'Get' %}
+  {{ operation.ActualOperationName }}: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}{% endif %}) => {
+    return nock(getBaseUrl())
+      .get('/{{ operation.Path }}')
+      {% if operation.Parameters.size > 0 -%}.query(queryParams){% endif %};
+  },
+  {% elsif operation.HttpMethodUpper == 'Post' %}
+  {{ operation.ActualOperationName }}: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}{% endif %}) => {
+    return nock(getBaseUrl())
+      .post('/{{ operation.Path }}')
+      {% if operation.Parameters.size > 0 -%}.query(queryParams){% endif %};
+  },
+  {% elsif operation.HttpMethodUpper == 'Put' %}
+  {{ operation.ActualOperationName }}: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}{% endif %}) => {
+    return nock(getBaseUrl())
+      .put('/{{ operation.Path }}')
+      {% if operation.Parameters.size > 0 -%}.query(queryParams){% endif %};
+    },
+  {% endif %}
+
+  {% if ResultType != 'void' %}
+  {{ operation.ActualOperationName }}Reply: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}response: {{ ResultType }}) => {
+    return {{ NockClassName }}.{{ operation.ActualOperationName }}({%- if operation.Parameters.size > 0 -%}queryParams{% endif %}).reply(200, response);
+  },
+  {% endif %}
+{% endif -%}
+{% endfor -%}
+}
+{% endif -%}
