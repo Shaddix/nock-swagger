@@ -1,5 +1,18 @@
 /* eslint-disable */
 
+type UploadFileNockParameters = {
+  petId: number;
+  additionalMetadata: string | null | undefined;
+};
+
+type AddPetNockParameters = {
+  body: Pet;
+};
+
+type UpdatePetNockParameters = {
+  body: Pet;
+};
+
 type FindPetsByStatusNockParameters = {
   status: Status[];
 };
@@ -12,11 +25,43 @@ type GetPetByIdNockParameters = {
   petId: number;
 };
 
+type UpdatePetWithFormNockParameters = {
+  petId: number;
+  name: string | null | undefined;
+  status: string | null | undefined;
+};
+
+type DeletePetNockParameters = {
+  api_key: string | null | undefined;
+  petId: number;
+};
+
+type PlaceOrderNockParameters = {
+  body: Order;
+};
+
 type GetOrderByIdNockParameters = {
   orderId: number;
 };
 
+type DeleteOrderNockParameters = {
+  orderId: number;
+};
+
+type CreateUsersWithListInputNockParameters = {
+  body: User[];
+};
+
 type GetUserByNameNockParameters = {
+  username: string;
+};
+
+type UpdateUserNockParameters = {
+  username: string;
+  body: User;
+};
+
+type DeleteUserNockParameters = {
   username: string;
 };
 
@@ -25,126 +70,314 @@ type LoginUserNockParameters = {
   password: string;
 };
 
+type CreateUsersWithArrayInputNockParameters = {
+  body: User[];
+};
+
+type CreateUserNockParameters = {
+  body: User;
+};
+
 export const Nock = {
-  uploadFile: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl())
-      .post('/pet/{petId}/uploadImage')
-      .query(queryParams);
+  uploadFile: (
+    queryParams: UploadFileNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/pet/{petId}/uploadImage';
+    if (queryParams.petId === undefined || queryParams.petId === null)
+      throw new Error("The parameter 'petId' must be defined.");
+    url_ = url_.replace('{petId}', encodeURIComponent('' + queryParams.petId));
+    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
   },
 
   uploadFileReply: (
-    queryParams: LoginUserNockParameters,
+    queryParams: UploadFileNockParameters,
     response: ApiResponse,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
   ) => {
-    return Nock.uploadFile(queryParams).reply(200, response);
+    return Nock.uploadFile(queryParams, requestBody, interceptorOptions).reply(
+      200,
+      response,
+    );
   },
 
-  addPet: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).post('/pet').query(queryParams);
+  addPet: (
+    queryParams: AddPetNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/pet';
+    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
   },
 
-  updatePet: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).put('/pet').query(queryParams);
+  updatePet: (
+    queryParams: UpdatePetNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/pet';
+    return nock(getBaseUrl()).put(url_, requestBody, interceptorOptions);
   },
 
-  findPetsByStatus: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).get('/pet/findByStatus').query(queryParams);
+  findPetsByStatus: (
+    queryParams: FindPetsByStatusNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/pet/findByStatus';
+    return nock(getBaseUrl())
+      .get(url_, requestBody, interceptorOptions)
+      .query(queryParams);
   },
 
   findPetsByStatusReply: (
-    queryParams: LoginUserNockParameters,
+    queryParams: FindPetsByStatusNockParameters,
     response: Pet[],
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
   ) => {
-    return Nock.findPetsByStatus(queryParams).reply(200, response);
+    return Nock.findPetsByStatus(
+      queryParams,
+      requestBody,
+      interceptorOptions,
+    ).reply(200, response);
   },
 
-  findPetsByTags: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).get('/pet/findByTags').query(queryParams);
+  findPetsByTags: (
+    queryParams: FindPetsByTagsNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/pet/findByTags';
+    return nock(getBaseUrl())
+      .get(url_, requestBody, interceptorOptions)
+      .query(queryParams);
   },
 
   findPetsByTagsReply: (
-    queryParams: LoginUserNockParameters,
+    queryParams: FindPetsByTagsNockParameters,
     response: Pet[],
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
   ) => {
-    return Nock.findPetsByTags(queryParams).reply(200, response);
+    return Nock.findPetsByTags(
+      queryParams,
+      requestBody,
+      interceptorOptions,
+    ).reply(200, response);
   },
 
-  getPetById: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).get('/pet/{petId}').query(queryParams);
+  getPetById: (
+    queryParams: GetPetByIdNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/pet/{petId}';
+    if (queryParams.petId === undefined || queryParams.petId === null)
+      throw new Error("The parameter 'petId' must be defined.");
+    url_ = url_.replace('{petId}', encodeURIComponent('' + queryParams.petId));
+    return nock(getBaseUrl())
+      .get(url_, requestBody, interceptorOptions)
+      .query(queryParams);
   },
 
-  getPetByIdReply: (queryParams: LoginUserNockParameters, response: Pet) => {
-    return Nock.getPetById(queryParams).reply(200, response);
+  getPetByIdReply: (
+    queryParams: GetPetByIdNockParameters,
+    response: Pet,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    return Nock.getPetById(queryParams, requestBody, interceptorOptions).reply(
+      200,
+      response,
+    );
   },
 
-  updatePetWithForm: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).post('/pet/{petId}').query(queryParams);
+  updatePetWithForm: (
+    queryParams: UpdatePetWithFormNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/pet/{petId}';
+    if (queryParams.petId === undefined || queryParams.petId === null)
+      throw new Error("The parameter 'petId' must be defined.");
+    url_ = url_.replace('{petId}', encodeURIComponent('' + queryParams.petId));
+    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
   },
 
-  getInventory: () => {
-    return nock(getBaseUrl()).get('/store/inventory');
+  getInventory: (
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/store/inventory';
+    return nock(getBaseUrl()).get(url_, requestBody, interceptorOptions);
   },
 
-  getInventoryReply: (response: { [key: string]: number }) => {
-    return Nock.getInventory().reply(200, response);
+  getInventoryReply: (
+    response: { [key: string]: number },
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    return Nock.getInventory(requestBody, interceptorOptions).reply(
+      200,
+      response,
+    );
   },
 
-  placeOrder: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).post('/store/order').query(queryParams);
+  placeOrder: (
+    queryParams: PlaceOrderNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/store/order';
+    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
   },
 
-  placeOrderReply: (queryParams: LoginUserNockParameters, response: Order) => {
-    return Nock.placeOrder(queryParams).reply(200, response);
+  placeOrderReply: (
+    queryParams: PlaceOrderNockParameters,
+    response: Order,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    return Nock.placeOrder(queryParams, requestBody, interceptorOptions).reply(
+      200,
+      response,
+    );
   },
 
-  getOrderById: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).get('/store/order/{orderId}').query(queryParams);
+  getOrderById: (
+    queryParams: GetOrderByIdNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/store/order/{orderId}';
+    if (queryParams.orderId === undefined || queryParams.orderId === null)
+      throw new Error("The parameter 'orderId' must be defined.");
+    url_ = url_.replace(
+      '{orderId}',
+      encodeURIComponent('' + queryParams.orderId),
+    );
+    return nock(getBaseUrl())
+      .get(url_, requestBody, interceptorOptions)
+      .query(queryParams);
   },
 
   getOrderByIdReply: (
-    queryParams: LoginUserNockParameters,
+    queryParams: GetOrderByIdNockParameters,
     response: Order,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
   ) => {
-    return Nock.getOrderById(queryParams).reply(200, response);
+    return Nock.getOrderById(
+      queryParams,
+      requestBody,
+      interceptorOptions,
+    ).reply(200, response);
   },
 
-  createUsersWithListInput: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).post('/user/createWithList').query(queryParams);
+  createUsersWithListInput: (
+    queryParams: CreateUsersWithListInputNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/user/createWithList';
+    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
   },
 
-  getUserByName: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).get('/user/{username}').query(queryParams);
+  getUserByName: (
+    queryParams: GetUserByNameNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/user/{username}';
+    if (queryParams.username === undefined || queryParams.username === null)
+      throw new Error("The parameter 'username' must be defined.");
+    url_ = url_.replace(
+      '{username}',
+      encodeURIComponent('' + queryParams.username),
+    );
+    return nock(getBaseUrl())
+      .get(url_, requestBody, interceptorOptions)
+      .query(queryParams);
   },
 
   getUserByNameReply: (
-    queryParams: LoginUserNockParameters,
+    queryParams: GetUserByNameNockParameters,
     response: User,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
   ) => {
-    return Nock.getUserByName(queryParams).reply(200, response);
+    return Nock.getUserByName(
+      queryParams,
+      requestBody,
+      interceptorOptions,
+    ).reply(200, response);
   },
 
-  updateUser: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).put('/user/{username}').query(queryParams);
+  updateUser: (
+    queryParams: UpdateUserNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/user/{username}';
+    if (queryParams.username === undefined || queryParams.username === null)
+      throw new Error("The parameter 'username' must be defined.");
+    url_ = url_.replace(
+      '{username}',
+      encodeURIComponent('' + queryParams.username),
+    );
+    return nock(getBaseUrl()).put(url_, requestBody, interceptorOptions);
   },
 
-  loginUser: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).get('/user/login').query(queryParams);
+  loginUser: (
+    queryParams: LoginUserNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/user/login';
+    return nock(getBaseUrl())
+      .get(url_, requestBody, interceptorOptions)
+      .query(queryParams);
   },
 
-  loginUserReply: (queryParams: LoginUserNockParameters, response: string) => {
-    return Nock.loginUser(queryParams).reply(200, response);
+  loginUserReply: (
+    queryParams: LoginUserNockParameters,
+    response: string,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    return Nock.loginUser(queryParams, requestBody, interceptorOptions).reply(
+      200,
+      response,
+    );
   },
 
-  logoutUser: () => {
-    return nock(getBaseUrl()).get('/user/logout');
+  logoutUser: (
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/user/logout';
+    return nock(getBaseUrl()).get(url_, requestBody, interceptorOptions);
   },
 
-  createUsersWithArrayInput: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).post('/user/createWithArray').query(queryParams);
+  createUsersWithArrayInput: (
+    queryParams: CreateUsersWithArrayInputNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/user/createWithArray';
+    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
   },
 
-  createUser: (queryParams: LoginUserNockParameters) => {
-    return nock(getBaseUrl()).post('/user').query(queryParams);
+  createUser: (
+    queryParams: CreateUserNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options,
+  ) => {
+    let url_ = '/user';
+    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
   },
 };
 
@@ -493,7 +726,7 @@ export enum OrderStatus {
   Delivered = 'delivered',
 }
 
-import nock from 'nock';
+import nock, { Options, RequestBodyMatcher } from 'nock';
 
 let _baseUrl = '';
 /*

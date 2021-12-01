@@ -1,3 +1,3 @@
-import * as AxiosQuery from './axios-client';
+import * as QueryFactory from './axios-client';
 
-export { AxiosQuery};
+export { QueryFactory };
