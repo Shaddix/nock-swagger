@@ -28,10 +28,10 @@
   },
   "scripts": {
     "generate-react-query": "react-query-swagger /runtime:Net50 /input:https://petstore.swagger.io/v2/swagger.json /output:src/api/axios-client.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined",
-    "generate-nock": "nock-swagger /runtime:Net50 /input:https://petstore.swagger.io/v2/swagger.json /output:src/__tests__/nock-helpers.ts",
+    "generate-nock": "nock-swagger /runtime:Net50 /input:https://petstore.swagger.io/v2/swagger.json /output:src/_tests/nock-helpers.ts",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll=false --forceExit --silent",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

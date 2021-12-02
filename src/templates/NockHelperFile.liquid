@@ -1,4 +1,24 @@
-import nock, { Options, RequestBodyMatcher } from 'nock';
+import nock, { Options, RequestBodyMatcher, Interceptor } from 'nock';
+
+
+/*
+Removes passed interceptor from Nock
+*/
+export function removeInterceptor(interceptor: Interceptor) {
+  let beforeRemoveCount = nock.pendingMocks().length;
+  let afterRemoveCount = 0;
+
+  // We try to remove the interceptor until we find out
+  // that the number of pendingMocks haven't changed after removal.
+  // This means that all interceptors handling the URL were removed.
+  // We have to do this trick, because `nock.removeInterceptor(interceptor);` could return `true`
+  // even if there were no interceptors left for the URL.
+  while (beforeRemoveCount != afterRemoveCount) {
+    beforeRemoveCount = nock.pendingMocks().length;
+    nock.removeInterceptor(interceptor);
+    afterRemoveCount = nock.pendingMocks().length;
+  }
+}
 
 let _baseUrl = '';
 /*

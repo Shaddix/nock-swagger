@@ -36,8 +36,12 @@ export const {{ NockClassName }} = {
   },
 
   {% if ResultType != 'void' %}
-  {{ operation.ActualOperationName }}Reply: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}response: {{ ResultType }}, requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
-    return {{ NockClassName }}.{{ operation.ActualOperationName }}({%- if operation.Parameters.size > 0 -%}queryParams, {% endif %}requestBody, interceptorOptions).reply(200, response);
+  {{ operation.ActualOperationName }}Reply: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}response: {{ ResultType }}, removePreviousInterceptors = true, requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
+    const interceptor = {{ NockClassName }}.{{ operation.ActualOperationName }}({%- if operation.Parameters.size > 0 -%}queryParams, {% endif %}requestBody, interceptorOptions);
+    if (removePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor.reply(200, response);
   },
   {% endif %}
 {% endif -%}

@@ -2,16 +2,11 @@ import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 
-import { mainRender } from './__tests__/infrastructure';
-import {
-  Category,
-  Nock,
-  Pet,
-  PetStatus,
-  Status,
-} from './__tests__/nock-helpers';
+import { mainRender } from './infrastructure';
+import { Category, Nock, Pet, PetStatus, Status } from './nock-helpers';
 import nock from 'nock';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import { QueryFactory } from '../api';
 
 test('simple get without query params', async () => {
   Nock.getPetByIdReply(
@@ -60,25 +55,53 @@ test('get with query params', async () => {
   });
 });
 
-test('manual request and stub', async () => {
+describe('interceptor removal tests', () => {
   const queryClient = new QueryClient();
   const wrapper = ({ children }: any) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
-
-  nock('http://localhost').get('/api/data?b=2&a=1').reply(200, {
-    name: 'asd',
+  beforeEach(() => {
+    nock.cleanAll();
+    queryClient.clear();
   });
 
-  const { result, waitFor } = renderHook(() => useFetchDataManual(), {
-    wrapper,
+  it('interceptor exist, add another interceptor with removePreviousInterceptors set to false - first interceptor is still used', async () => {
+    Nock.getPetByIdReply({ petId: 1 }, new Pet({ id: 2 } as any)).persist();
+    Nock.getPetByIdReply(
+      { petId: 1 },
+      new Pet({ id: 3 } as any),
+      false,
+    ).persist();
+
+    const { result, waitFor } = renderHook(
+      () => QueryFactory.Query.useGetPetByIdQuery(1),
+      {
+        wrapper,
+      },
+    );
+    await waitFor(() => {
+      return result.current.isSuccess;
+    });
+
+    expect(result.current.data!.id).toBe(2);
   });
 
-  await waitFor(() => {
-    return result.current.isSuccess;
-  });
+  it('interceptor exist, add another interceptor with removePreviousInterceptors set to true - second interceptor is still used', async () => {
+    Nock.getPetByIdReply({ petId: 1 }, new Pet({ id: 4 } as any)).persist();
+    Nock.getPetByIdReply({ petId: 1 }, new Pet({ id: 5 } as any)).persist();
 
-  expect(result.current.data?.name).toEqual('asd');
+    const { result, waitFor } = renderHook(
+      () => QueryFactory.Query.useGetPetByIdQuery(1),
+      {
+        wrapper,
+      },
+    );
+    await waitFor(() => {
+      return result.current.isSuccess;
+    });
+
+    expect(result.current.data!.id).toBe(5);
+  });
 });
 
 function useFetchDataManual() {

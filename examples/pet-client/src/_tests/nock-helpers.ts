@@ -101,13 +101,19 @@ export const Nock = {
   uploadFileReply: (
     queryParams: UploadFileNockParameters,
     response: ApiResponse,
+    removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    return Nock.uploadFile(queryParams, requestBody, interceptorOptions).reply(
-      200,
-      response,
+    const interceptor = Nock.uploadFile(
+      queryParams,
+      requestBody,
+      interceptorOptions,
     );
+    if (removePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor.reply(200, response);
   },
 
   addPet: (
@@ -170,14 +176,19 @@ export const Nock = {
   findPetsByStatusReply: (
     queryParams: FindPetsByStatusNockParameters,
     response: Pet[],
+    removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    return Nock.findPetsByStatus(
+    const interceptor = Nock.findPetsByStatus(
       queryParams,
       requestBody,
       interceptorOptions,
-    ).reply(200, response);
+    );
+    if (removePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor.reply(200, response);
   },
 
   findPetsByTags: (
@@ -208,14 +219,19 @@ export const Nock = {
   findPetsByTagsReply: (
     queryParams: FindPetsByTagsNockParameters,
     response: Pet[],
+    removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    return Nock.findPetsByTags(
+    const interceptor = Nock.findPetsByTags(
       queryParams,
       requestBody,
       interceptorOptions,
-    ).reply(200, response);
+    );
+    if (removePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor.reply(200, response);
   },
 
   getPetById: (
@@ -240,13 +256,19 @@ export const Nock = {
   getPetByIdReply: (
     queryParams: GetPetByIdNockParameters,
     response: Pet,
+    removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    return Nock.getPetById(queryParams, requestBody, interceptorOptions).reply(
-      200,
-      response,
+    const interceptor = Nock.getPetById(
+      queryParams,
+      requestBody,
+      interceptorOptions,
     );
+    if (removePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor.reply(200, response);
   },
 
   updatePetWithForm: (
@@ -283,13 +305,15 @@ export const Nock = {
 
   getInventoryReply: (
     response: { [key: string]: number },
+    removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    return Nock.getInventory(requestBody, interceptorOptions).reply(
-      200,
-      response,
-    );
+    const interceptor = Nock.getInventory(requestBody, interceptorOptions);
+    if (removePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor.reply(200, response);
   },
 
   placeOrder: (
@@ -311,13 +335,19 @@ export const Nock = {
   placeOrderReply: (
     queryParams: PlaceOrderNockParameters,
     response: Order,
+    removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    return Nock.placeOrder(queryParams, requestBody, interceptorOptions).reply(
-      200,
-      response,
+    const interceptor = Nock.placeOrder(
+      queryParams,
+      requestBody,
+      interceptorOptions,
     );
+    if (removePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor.reply(200, response);
   },
 
   getOrderById: (
@@ -342,14 +372,19 @@ export const Nock = {
   getOrderByIdReply: (
     queryParams: GetOrderByIdNockParameters,
     response: Order,
+    removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    return Nock.getOrderById(
+    const interceptor = Nock.getOrderById(
       queryParams,
       requestBody,
       interceptorOptions,
-    ).reply(200, response);
+    );
+    if (removePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor.reply(200, response);
   },
 
   createUsersWithListInput: (
@@ -390,14 +425,19 @@ export const Nock = {
   getUserByNameReply: (
     queryParams: GetUserByNameNockParameters,
     response: User,
+    removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    return Nock.getUserByName(
+    const interceptor = Nock.getUserByName(
       queryParams,
       requestBody,
       interceptorOptions,
-    ).reply(200, response);
+    );
+    if (removePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor.reply(200, response);
   },
 
   updateUser: (
@@ -448,13 +488,19 @@ export const Nock = {
   loginUserReply: (
     queryParams: LoginUserNockParameters,
     response: string,
+    removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    return Nock.loginUser(queryParams, requestBody, interceptorOptions).reply(
-      200,
-      response,
+    const interceptor = Nock.loginUser(
+      queryParams,
+      requestBody,
+      interceptorOptions,
     );
+    if (removePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor.reply(200, response);
   },
 
   logoutUser: (
@@ -848,7 +894,26 @@ export enum OrderStatus {
   Delivered = 'delivered',
 }
 
-import nock, { Options, RequestBodyMatcher } from 'nock';
+import nock, { Options, RequestBodyMatcher, Interceptor } from 'nock';
+
+/*
+Removes passed interceptor from Nock
+*/
+export function removeInterceptor(interceptor: Interceptor) {
+  let beforeRemoveCount = nock.pendingMocks().length;
+  let afterRemoveCount = 0;
+
+  // We try to remove the interceptor until we find out
+  // that the number of pendingMocks haven't changed after removal.
+  // This means that all interceptors handling the URL were removed.
+  // We have to do this trick, because `nock.removeInterceptor(interceptor);` could return `true`
+  // even if there were no interceptors left for the URL.
+  while (beforeRemoveCount != afterRemoveCount) {
+    beforeRemoveCount = nock.pendingMocks().length;
+    nock.removeInterceptor(interceptor);
+    afterRemoveCount = nock.pendingMocks().length;
+  }
+}
 
 let _baseUrl = '';
 /*
