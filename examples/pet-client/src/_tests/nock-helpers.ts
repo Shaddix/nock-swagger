@@ -100,7 +100,7 @@ export const Nock = {
 
   uploadFileReply: (
     queryParams: UploadFileNockParameters,
-    response: ApiResponse,
+    response: IApiResponse,
     removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
@@ -113,7 +113,7 @@ export const Nock = {
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, response);
+    return interceptor.reply(200, new ApiResponse(response));
   },
 
   addPet: (
@@ -255,7 +255,7 @@ export const Nock = {
 
   getPetByIdReply: (
     queryParams: GetPetByIdNockParameters,
-    response: Pet,
+    response: IPet,
     removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
@@ -268,7 +268,7 @@ export const Nock = {
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, response);
+    return interceptor.reply(200, new Pet(response));
   },
 
   updatePetWithForm: (
@@ -334,7 +334,7 @@ export const Nock = {
 
   placeOrderReply: (
     queryParams: PlaceOrderNockParameters,
-    response: Order,
+    response: IOrder,
     removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
@@ -347,7 +347,7 @@ export const Nock = {
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, response);
+    return interceptor.reply(200, new Order(response));
   },
 
   getOrderById: (
@@ -371,7 +371,7 @@ export const Nock = {
 
   getOrderByIdReply: (
     queryParams: GetOrderByIdNockParameters,
-    response: Order,
+    response: IOrder,
     removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
@@ -384,7 +384,7 @@ export const Nock = {
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, response);
+    return interceptor.reply(200, new Order(response));
   },
 
   createUsersWithListInput: (
@@ -424,7 +424,7 @@ export const Nock = {
 
   getUserByNameReply: (
     queryParams: GetUserByNameNockParameters,
-    response: User,
+    response: IUser,
     removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
@@ -437,7 +437,7 @@ export const Nock = {
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, response);
+    return interceptor.reply(200, new User(response));
   },
 
   updateUser: (

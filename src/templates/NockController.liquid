@@ -22,6 +22,16 @@ export const {{ NockClassName }} = {
 {%- for operation in Operations -%}
 {%- if operation.HttpMethodUpper == 'Get' or operation.HttpMethodUpper == 'Post' or operation.HttpMethodUpper == 'Put' -%}
   {%- assign ResultType = operation.ResultType -%}
+  {%- assign UseInterfaceResult = false -%}
+  {%- if ResultType != 'string' and ResultType != 'number' and ResultType != 'boolean' and ResultType != 'Date' and ResultType != 'void' -%}
+    {%- assign firstResultSymbol = ResultType | slice: 0 -%}
+    {%- assign lastSymbols = ResultType | slice: -2, 2 -%}
+    {%- if firstResultSymbol != '{' and lastSymbols != '[]' -%}
+      {%- assign OriginalResultType = ResultType -%}
+      {%- assign ResultType = ResultType | prepend: 'I' -%}
+      {%- assign UseInterfaceResult = true -%}
+    {%- endif %}
+  {%- endif %}
   {%- assign firstLetter = operation.ActualOperationName | slice: 0, 1 | upcase -%}
   {%- assign parameterClassName = operation.ActualOperationName | append: 'q' | slice: 1, operation.ActualOperationName.size | prepend: firstLetter | slice: 0, operation.ActualOperationName.size | append: NockClassName | append: 'Parameters' -%}
 
@@ -41,7 +51,7 @@ export const {{ NockClassName }} = {
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, response);
+    return interceptor.reply(200, {% if UseInterfaceResult %}new {{ OriginalResultType  }}(response){% else %}response{% endif %});
   },
   {% endif %}
 {% endif -%}

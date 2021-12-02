@@ -87,8 +87,14 @@ describe('interceptor removal tests', () => {
   });
 
   it('interceptor exist, add another interceptor with removePreviousInterceptors set to true - second interceptor is still used', async () => {
-    Nock.getPetByIdReply({ petId: 1 }, new Pet({ id: 4 } as any)).persist();
-    Nock.getPetByIdReply({ petId: 1 }, new Pet({ id: 5 } as any)).persist();
+    Nock.getPetByIdReply(
+      { petId: 1 },
+      { id: 4, photoUrls: [], name: 'a' },
+    ).persist();
+    Nock.getPetByIdReply(
+      { petId: 1 },
+      { id: 5, photoUrls: [], name: 'a' },
+    ).persist();
 
     const { result, waitFor } = renderHook(
       () => QueryFactory.Query.useGetPetByIdQuery(1),

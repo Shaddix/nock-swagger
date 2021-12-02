@@ -4,11 +4,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { AxiosQuery } from './api';
+import { QueryFactory } from './api';
 
 const queryClient = new QueryClient();
-AxiosQuery.setBaseUrl('https://petstore.swagger.io/v2');
-AxiosQuery.Query.findPetsByStatusDefaultOptions = {
+QueryFactory.setBaseUrl('https://petstore.swagger.io/v2');
+QueryFactory.Query.findPetsByStatusDefaultOptions = {
   cacheTime: 10000,
 };
 ReactDOM.render(
