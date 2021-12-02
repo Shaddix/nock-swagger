@@ -61,6 +61,8 @@ export const ProductNock = {
     return interceptor.reply(200, new ProductDto(response));
   },
 
+  /**
+   */
   search: (
     queryParams: SearchProductNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -92,6 +94,8 @@ export const ProductNock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   */
   searchReply: (
     queryParams: SearchProductNockParameters,
     response: IPagedResultOfProductListItemDto,
@@ -156,6 +160,9 @@ type GetClientRequestParametersOidcConfigurationNockParameters = {
 };
 
 export const OidcConfigurationNock = {
+  /**
+   * Requests OIDC configuration for oAuth.
+   */
   getClientRequestParameters: (
     queryParams: GetClientRequestParametersOidcConfigurationNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -229,6 +236,9 @@ type FormDataTestDataNockParameters = {
 };
 
 export const TestDataNock = {
+  /**
+   * Demonstrates an error response.
+   */
   throwError: (
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
@@ -242,6 +252,9 @@ export const TestDataNock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Demonstrates an error response.
+   */
   throwErrorReply: (
     response: string,
     removePreviousInterceptors = true,
@@ -258,6 +271,9 @@ export const TestDataNock = {
     return interceptor.reply(200, response);
   },
 
+  /**
+   * Sends a dummy email
+   */
   sendEmail: (
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
@@ -271,6 +287,9 @@ export const TestDataNock = {
     return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Sends a dummy email
+   */
   sendEmailReply: (
     response: string,
     removePreviousInterceptors = true,
@@ -284,6 +303,9 @@ export const TestDataNock = {
     return interceptor.reply(200, response);
   },
 
+  /**
+   * Tests RequiredOrUndefined attribute
+   */
   patch: (
     queryParams: PatchTestDataNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -300,6 +322,9 @@ export const TestDataNock = {
     return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Tests RequiredOrUndefined attribute
+   */
   patchReply: (
     queryParams: PatchTestDataNockParameters,
     response: string,
@@ -318,6 +343,9 @@ export const TestDataNock = {
     return interceptor.reply(200, response);
   },
 
+  /**
+   * Try this in browser with language set to DE
+   */
   formData: (
     queryParams: FormDataTestDataNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -334,6 +362,9 @@ export const TestDataNock = {
     return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Try this in browser with language set to DE
+   */
   formDataReply: (
     queryParams: FormDataTestDataNockParameters,
     response: string,
@@ -354,6 +385,9 @@ export const TestDataNock = {
 };
 
 export const VersionNock = {
+  /**
+   * Gets the version of the service.
+   */
   version: (requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/api';
@@ -364,6 +398,10 @@ export const VersionNock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Gets the version of the service.
+   * @param response A string representing the version.
+   */
   versionReply: (
     response: string,
     removePreviousInterceptors = true,

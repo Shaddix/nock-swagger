@@ -79,6 +79,9 @@ type CreateUserNockParameters = {
 };
 
 export const Nock = {
+  /**
+   * uploads an image
+   */
   uploadFile: (
     queryParams: UploadFileNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -98,6 +101,10 @@ export const Nock = {
     return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * uploads an image
+   * @param response successful operation
+   */
   uploadFileReply: (
     queryParams: UploadFileNockParameters,
     response: IApiResponse,
@@ -116,6 +123,9 @@ export const Nock = {
     return interceptor.reply(200, new ApiResponse(response));
   },
 
+  /**
+   * Add a new pet to the store
+   */
   addPet: (
     queryParams: AddPetNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -132,6 +142,9 @@ export const Nock = {
     return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Update an existing pet
+   */
   updatePet: (
     queryParams: UpdatePetNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -148,6 +161,9 @@ export const Nock = {
     return nock(getBaseUrl()).put(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Finds Pets by status
+   */
   findPetsByStatus: (
     queryParams: FindPetsByStatusNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -173,6 +189,10 @@ export const Nock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Finds Pets by status
+   * @param response successful operation
+   */
   findPetsByStatusReply: (
     queryParams: FindPetsByStatusNockParameters,
     response: Pet[],
@@ -191,6 +211,10 @@ export const Nock = {
     return interceptor.reply(200, response);
   },
 
+  /**
+   * Finds Pets by tags
+   * @deprecated
+   */
   findPetsByTags: (
     queryParams: FindPetsByTagsNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -216,6 +240,11 @@ export const Nock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Finds Pets by tags
+   * @param response successful operation
+   * @deprecated
+   */
   findPetsByTagsReply: (
     queryParams: FindPetsByTagsNockParameters,
     response: Pet[],
@@ -234,6 +263,9 @@ export const Nock = {
     return interceptor.reply(200, response);
   },
 
+  /**
+   * Find pet by ID
+   */
   getPetById: (
     queryParams: GetPetByIdNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -253,6 +285,10 @@ export const Nock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Find pet by ID
+   * @param response successful operation
+   */
   getPetByIdReply: (
     queryParams: GetPetByIdNockParameters,
     response: IPet,
@@ -271,6 +307,9 @@ export const Nock = {
     return interceptor.reply(200, new Pet(response));
   },
 
+  /**
+   * Updates a pet in the store with form data
+   */
   updatePetWithForm: (
     queryParams: UpdatePetWithFormNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -290,6 +329,9 @@ export const Nock = {
     return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Returns pet inventories by status
+   */
   getInventory: (
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
@@ -303,6 +345,10 @@ export const Nock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Returns pet inventories by status
+   * @param response successful operation
+   */
   getInventoryReply: (
     response: { [key: string]: number },
     removePreviousInterceptors = true,
@@ -316,6 +362,9 @@ export const Nock = {
     return interceptor.reply(200, response);
   },
 
+  /**
+   * Place an order for a pet
+   */
   placeOrder: (
     queryParams: PlaceOrderNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -332,6 +381,10 @@ export const Nock = {
     return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Place an order for a pet
+   * @param response successful operation
+   */
   placeOrderReply: (
     queryParams: PlaceOrderNockParameters,
     response: IOrder,
@@ -350,6 +403,9 @@ export const Nock = {
     return interceptor.reply(200, new Order(response));
   },
 
+  /**
+   * Find purchase order by ID
+   */
   getOrderById: (
     queryParams: GetOrderByIdNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -369,6 +425,10 @@ export const Nock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Find purchase order by ID
+   * @param response successful operation
+   */
   getOrderByIdReply: (
     queryParams: GetOrderByIdNockParameters,
     response: IOrder,
@@ -387,6 +447,9 @@ export const Nock = {
     return interceptor.reply(200, new Order(response));
   },
 
+  /**
+   * Creates list of users with given input array
+   */
   createUsersWithListInput: (
     queryParams: CreateUsersWithListInputNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -403,6 +466,9 @@ export const Nock = {
     return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Get user by user name
+   */
   getUserByName: (
     queryParams: GetUserByNameNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -422,6 +488,10 @@ export const Nock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Get user by user name
+   * @param response successful operation
+   */
   getUserByNameReply: (
     queryParams: GetUserByNameNockParameters,
     response: IUser,
@@ -440,6 +510,9 @@ export const Nock = {
     return interceptor.reply(200, new User(response));
   },
 
+  /**
+   * Updated user
+   */
   updateUser: (
     queryParams: UpdateUserNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -459,6 +532,9 @@ export const Nock = {
     return nock(getBaseUrl()).put(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Logs user into the system
+   */
   loginUser: (
     queryParams: LoginUserNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -485,6 +561,10 @@ export const Nock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Logs user into the system
+   * @param response successful operation
+   */
   loginUserReply: (
     queryParams: LoginUserNockParameters,
     response: string,
@@ -503,6 +583,9 @@ export const Nock = {
     return interceptor.reply(200, response);
   },
 
+  /**
+   * Logs out current logged in user session
+   */
   logoutUser: (
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
@@ -516,6 +599,9 @@ export const Nock = {
     return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Creates list of users with given input array
+   */
   createUsersWithArrayInput: (
     queryParams: CreateUsersWithArrayInputNockParameters,
     requestBody?: RequestBodyMatcher,
@@ -532,6 +618,9 @@ export const Nock = {
     return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
+  /**
+   * Create user
+   */
   createUser: (
     queryParams: CreateUserNockParameters,
     requestBody?: RequestBodyMatcher,

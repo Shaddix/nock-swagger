@@ -35,6 +35,16 @@ export const {{ NockClassName }} = {
   {%- assign firstLetter = operation.ActualOperationName | slice: 0, 1 | upcase -%}
   {%- assign parameterClassName = operation.ActualOperationName | append: 'q' | slice: 1, operation.ActualOperationName.size | prepend: firstLetter | slice: 0, operation.ActualOperationName.size | append: NockClassName | append: 'Parameters' -%}
 
+  {% if operation.HasDocumentation -%}
+  /**
+  {%     if operation.HasSummary -%}
+   * {{ operation.Summary }}
+  {%     endif -%}
+  {%     if operation.IsDeprecated -%}
+   * @deprecated
+  {%     endif -%}
+   */
+  {% endif -%}
   {{ operation.ActualOperationName }}: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
     {% template Path %}
     return nock(getBaseUrl())
@@ -46,6 +56,19 @@ export const {{ NockClassName }} = {
   },
 
   {% if ResultType != 'void' %}
+  {% if operation.HasDocumentation -%}
+  /**
+  {%     if operation.HasSummary -%}
+   * {{ operation.Summary }}
+  {%     endif -%}
+  {%     if operation.HasResultDescription -%}
+   * @param response {{ operation.ResultDescription }}
+  {%     endif -%}
+  {%     if operation.IsDeprecated -%}
+   * @deprecated
+  {%     endif -%}
+   */
+  {% endif -%}
   {{ operation.ActualOperationName }}Reply: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}response: {{ ResultType }}, removePreviousInterceptors = true, requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
     const interceptor = {{ NockClassName }}.{{ operation.ActualOperationName }}({%- if operation.Parameters.size > 0 -%}queryParams, {% endif %}requestBody, interceptorOptions);
     if (removePreviousInterceptors) {
