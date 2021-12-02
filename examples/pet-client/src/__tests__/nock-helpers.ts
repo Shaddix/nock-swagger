@@ -84,11 +84,18 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/pet/{petId}/uploadImage';
-    if (queryParams.petId === undefined || queryParams.petId === null)
-      throw new Error("The parameter 'petId' must be defined.");
-    url_ = url_.replace('{petId}', encodeURIComponent('' + queryParams.petId));
-    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
+    const { petId } = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/pet/{petId}/uploadImage';
+      if (petId === undefined || petId === null)
+        throw new Error("The parameter 'petId' must be defined.");
+      url_ = url_.replace('{petId}', encodeURIComponent('' + petId));
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
   uploadFileReply: (
@@ -108,8 +115,15 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/pet';
-    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
+    const {} = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/pet';
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
   updatePet: (
@@ -117,8 +131,15 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/pet';
-    return nock(getBaseUrl()).put(url_, requestBody, interceptorOptions);
+    const {} = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/pet';
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).put(url, requestBody, interceptorOptions);
   },
 
   findPetsByStatus: (
@@ -126,10 +147,24 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/pet/findByStatus';
-    return nock(getBaseUrl())
-      .get(url_, requestBody, interceptorOptions)
-      .query(queryParams);
+    const { status } = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/pet/findByStatus?';
+      if (status === undefined || status === null)
+        throw new Error(
+          "The parameter 'status' must be defined and cannot be null.",
+        );
+      else
+        status &&
+          status.forEach((item) => {
+            url_ += 'status=' + encodeURIComponent('' + item) + '&';
+          });
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
   findPetsByStatusReply: (
@@ -150,10 +185,24 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/pet/findByTags';
-    return nock(getBaseUrl())
-      .get(url_, requestBody, interceptorOptions)
-      .query(queryParams);
+    const { tags } = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/pet/findByTags?';
+      if (tags === undefined || tags === null)
+        throw new Error(
+          "The parameter 'tags' must be defined and cannot be null.",
+        );
+      else
+        tags &&
+          tags.forEach((item) => {
+            url_ += 'tags=' + encodeURIComponent('' + item) + '&';
+          });
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
   findPetsByTagsReply: (
@@ -174,13 +223,18 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/pet/{petId}';
-    if (queryParams.petId === undefined || queryParams.petId === null)
-      throw new Error("The parameter 'petId' must be defined.");
-    url_ = url_.replace('{petId}', encodeURIComponent('' + queryParams.petId));
-    return nock(getBaseUrl())
-      .get(url_, requestBody, interceptorOptions)
-      .query(queryParams);
+    const { petId } = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/pet/{petId}';
+      if (petId === undefined || petId === null)
+        throw new Error("The parameter 'petId' must be defined.");
+      url_ = url_.replace('{petId}', encodeURIComponent('' + petId));
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
   getPetByIdReply: (
@@ -200,19 +254,31 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/pet/{petId}';
-    if (queryParams.petId === undefined || queryParams.petId === null)
-      throw new Error("The parameter 'petId' must be defined.");
-    url_ = url_.replace('{petId}', encodeURIComponent('' + queryParams.petId));
-    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
+    const { petId } = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/pet/{petId}';
+      if (petId === undefined || petId === null)
+        throw new Error("The parameter 'petId' must be defined.");
+      url_ = url_.replace('{petId}', encodeURIComponent('' + petId));
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
   getInventory: (
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/store/inventory';
-    return nock(getBaseUrl()).get(url_, requestBody, interceptorOptions);
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/store/inventory';
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
   getInventoryReply: (
@@ -231,8 +297,15 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/store/order';
-    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
+    const {} = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/store/order';
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
   placeOrderReply: (
@@ -252,16 +325,18 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/store/order/{orderId}';
-    if (queryParams.orderId === undefined || queryParams.orderId === null)
-      throw new Error("The parameter 'orderId' must be defined.");
-    url_ = url_.replace(
-      '{orderId}',
-      encodeURIComponent('' + queryParams.orderId),
-    );
-    return nock(getBaseUrl())
-      .get(url_, requestBody, interceptorOptions)
-      .query(queryParams);
+    const { orderId } = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/store/order/{orderId}';
+      if (orderId === undefined || orderId === null)
+        throw new Error("The parameter 'orderId' must be defined.");
+      url_ = url_.replace('{orderId}', encodeURIComponent('' + orderId));
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
   getOrderByIdReply: (
@@ -282,8 +357,15 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/user/createWithList';
-    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
+    const {} = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/user/createWithList';
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
   getUserByName: (
@@ -291,16 +373,18 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/user/{username}';
-    if (queryParams.username === undefined || queryParams.username === null)
-      throw new Error("The parameter 'username' must be defined.");
-    url_ = url_.replace(
-      '{username}',
-      encodeURIComponent('' + queryParams.username),
-    );
-    return nock(getBaseUrl())
-      .get(url_, requestBody, interceptorOptions)
-      .query(queryParams);
+    const { username } = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/user/{username}';
+      if (username === undefined || username === null)
+        throw new Error("The parameter 'username' must be defined.");
+      url_ = url_.replace('{username}', encodeURIComponent('' + username));
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
   getUserByNameReply: (
@@ -321,14 +405,18 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/user/{username}';
-    if (queryParams.username === undefined || queryParams.username === null)
-      throw new Error("The parameter 'username' must be defined.");
-    url_ = url_.replace(
-      '{username}',
-      encodeURIComponent('' + queryParams.username),
-    );
-    return nock(getBaseUrl()).put(url_, requestBody, interceptorOptions);
+    const { username } = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/user/{username}';
+      if (username === undefined || username === null)
+        throw new Error("The parameter 'username' must be defined.");
+      url_ = url_.replace('{username}', encodeURIComponent('' + username));
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).put(url, requestBody, interceptorOptions);
   },
 
   loginUser: (
@@ -336,10 +424,25 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/user/login';
-    return nock(getBaseUrl())
-      .get(url_, requestBody, interceptorOptions)
-      .query(queryParams);
+    const { username, password } = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/user/login?';
+      if (username === undefined || username === null)
+        throw new Error(
+          "The parameter 'username' must be defined and cannot be null.",
+        );
+      else url_ += 'username=' + encodeURIComponent('' + username) + '&';
+      if (password === undefined || password === null)
+        throw new Error(
+          "The parameter 'password' must be defined and cannot be null.",
+        );
+      else url_ += 'password=' + encodeURIComponent('' + password) + '&';
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
   loginUserReply: (
@@ -358,8 +461,13 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/user/logout';
-    return nock(getBaseUrl()).get(url_, requestBody, interceptorOptions);
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/user/logout';
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
   },
 
   createUsersWithArrayInput: (
@@ -367,8 +475,15 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/user/createWithArray';
-    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
+    const {} = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/user/createWithArray';
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 
   createUser: (
@@ -376,8 +491,15 @@ export const Nock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    let url_ = '/user';
-    return nock(getBaseUrl()).post(url_, requestBody, interceptorOptions);
+    const {} = queryParams;
+
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/user';
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
   },
 };
 

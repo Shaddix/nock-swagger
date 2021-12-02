@@ -8,6 +8,7 @@ import axios from 'axios';
 
 axios.defaults.adapter = require('axios/lib/adapters/http');
 QueryFactory.setBaseUrl('https://localhost');
+QueryFactory.setAxiosFactory(() => axios);
 setBaseUrl('https://localhost');
 const queryClient = new QueryClient();
 

@@ -1,22 +1,8 @@
-  let url_ = "/{{ operation.Path }}";
-{% for parameter in operation.PathParameters -%}
-{%     if parameter.IsRequired -%}
-  if (queryParams.{{ parameter.VariableName }} === undefined || queryParams.{{ parameter.VariableName }} === null)
-    throw new Error("The parameter '{{ parameter.VariableName }}' must be defined.");
-{%     else -%}
-  if (queryParams.{{ parameter.VariableName }} !== null && queryParams.{{ parameter.VariableName }} !== undefined)
-{%     endif -%}
-{%     if parameter.IsDateOrDateTimeArray -%}
-    url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent(queryParams.{{ parameter.VariableName }}.map(s_ => s_ ? s_.toJSON() : "null").join()));
-    {%     elseif parameter.IsDateOrDateTime -%}
-    url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent(queryParams.{{ parameter.VariableName }} ? "" + queryParams.{{ parameter.VariableName }}.toJSON() : "null"));
-    {%     elseif parameter.IsArray -%}
-    url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent(queryParams.{{ parameter.VariableName }}.join()));
-{%     else -%}
-    url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent("" + queryParams.{{ parameter.VariableName }}));
-{%     endif -%}
-{%     if parameter.IsOptional -%}
-  else
-    url_ = url_.replace("/{{ "{" }}{{ parameter.Name }}}", "");
-{%     endif -%}
-{% endfor -%}
+{%- if operation.Parameters.size > 0 -%}
+const {  {% for parameter in operation.QueryParameters %}{{ parameter.VariableName }},{% endfor %}{% for parameter in operation.PathParameters %}{{ parameter.VariableName }},{% endfor %}} = queryParams;
+{% endif %}
+const getUrl = (function (this: { baseUrl: string }) {
+  {% template Client.RequestUrl %}
+  return url_;
+}).bind({ baseUrl: '' });
+const url = getUrl();

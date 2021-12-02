@@ -25,38 +25,15 @@ export const {{ NockClassName }} = {
   {%- assign firstLetter = operation.ActualOperationName | slice: 0, 1 | upcase -%}
   {%- assign parameterClassName = operation.ActualOperationName | append: 'q' | slice: 1, operation.ActualOperationName.size | prepend: firstLetter | slice: 0, operation.ActualOperationName.size | append: NockClassName | append: 'Parameters' -%}
 
-  {% if operation.HttpMethodUpper == 'Get' %}
   {{ operation.ActualOperationName }}: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
     {% template Path %}
     return nock(getBaseUrl())
-      .get(url_, requestBody, interceptorOptions)
-      {% if operation.Parameters.size > 0 -%}.query(queryParams){% endif %};
+      .{%- if operation.HttpMethodUpper == 'Get' -%}get
+      {%- elsif operation.HttpMethodUpper == 'Post' -%}post
+      {%- elsif operation.HttpMethodUpper == 'Put' -%}put
+      {%- elsif operation.HttpMethodUpper == 'Patch' -%}patch
+      {%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(url, requestBody, interceptorOptions);
   },
-  {% elsif operation.HttpMethodUpper == 'Post' %}
-  {{ operation.ActualOperationName }}: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
-    {% template Path %}
-    return nock(getBaseUrl())
-      .post(url_, requestBody, interceptorOptions);
-  },
-  {% elsif operation.HttpMethodUpper == 'Put' %}
-  {{ operation.ActualOperationName }}: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
-    {% template Path %}
-    return nock(getBaseUrl())
-      .put(url_, requestBody, interceptorOptions);
-    },
-  {% elsif operation.HttpMethodUpper == 'Patch' %}
-    {{ operation.ActualOperationName }}: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
-    {% template Path %}
-    return nock(getBaseUrl())
-      .patch(url_, requestBody, interceptorOptions);
-    },
-  {% elsif operation.HttpMethodUpper == 'Delete' %}
-    {{ operation.ActualOperationName }}: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
-    {% template Path %}
-    return nock(getBaseUrl())
-      .delete(url_, requestBody, interceptorOptions);
-    },
-  {% endif %}
 
   {% if ResultType != 'void' %}
   {{ operation.ActualOperationName }}Reply: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}response: {{ ResultType }}, requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
