@@ -4,10 +4,6 @@ type UploadFileNockParameters = {
   petId: number;
 };
 
-type AddPetNockParameters = {};
-
-type UpdatePetNockParameters = {};
-
 type FindPetsByStatusNockParameters = {
   status: Status[];
 };
@@ -28,8 +24,6 @@ type DeletePetNockParameters = {
   petId: number;
 };
 
-type PlaceOrderNockParameters = {};
-
 type GetOrderByIdNockParameters = {
   orderId: number;
 };
@@ -37,8 +31,6 @@ type GetOrderByIdNockParameters = {
 type DeleteOrderNockParameters = {
   orderId: number;
 };
-
-type CreateUsersWithListInputNockParameters = {};
 
 type GetUserByNameNockParameters = {
   username: string;
@@ -56,10 +48,6 @@ type LoginUserNockParameters = {
   username: string;
   password: string;
 };
-
-type CreateUsersWithArrayInputNockParameters = {};
-
-type CreateUserNockParameters = {};
 
 export const Nock = {
   /**
@@ -109,13 +97,7 @@ export const Nock = {
   /**
    * Add a new pet to the store
    */
-  addPet: (
-    queryParams: AddPetNockParameters,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const {} = queryParams;
-
+  addPet: (requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/pet';
       url_ = url_.replace(/[?&]$/, '');
@@ -129,12 +111,9 @@ export const Nock = {
    * Update an existing pet
    */
   updatePet: (
-    queryParams: UpdatePetNockParameters,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const {} = queryParams;
-
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/pet';
       url_ = url_.replace(/[?&]$/, '');
@@ -371,12 +350,9 @@ export const Nock = {
    * Place an order for a pet
    */
   placeOrder: (
-    queryParams: PlaceOrderNockParameters,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const {} = queryParams;
-
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/store/order';
       url_ = url_.replace(/[?&]$/, '');
@@ -391,17 +367,12 @@ export const Nock = {
    * @param response successful operation
    */
   placeOrderReply: (
-    queryParams: PlaceOrderNockParameters,
     response: IOrder,
     removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const interceptor = Nock.placeOrder(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
+    const interceptor = Nock.placeOrder(requestBody, interceptorOptions);
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
@@ -478,12 +449,9 @@ export const Nock = {
    * Creates list of users with given input array
    */
   createUsersWithListInput: (
-    queryParams: CreateUsersWithListInputNockParameters,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const {} = queryParams;
-
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/user/createWithList';
       url_ = url_.replace(/[?&]$/, '');
@@ -652,12 +620,9 @@ export const Nock = {
    * Creates list of users with given input array
    */
   createUsersWithArrayInput: (
-    queryParams: CreateUsersWithArrayInputNockParameters,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const {} = queryParams;
-
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/user/createWithArray';
       url_ = url_.replace(/[?&]$/, '');
@@ -671,12 +636,9 @@ export const Nock = {
    * Create user
    */
   createUser: (
-    queryParams: CreateUserNockParameters,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const {} = queryParams;
-
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/user';
       url_ = url_.replace(/[?&]$/, '');

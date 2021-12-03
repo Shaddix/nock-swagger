@@ -1,4 +1,4 @@
-{%- if operation.Parameters.size > 0 -%}
+{%-   if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}
 const {  {% for parameter in operation.QueryParameters %}{{ parameter.VariableName }},{% endfor %}{% for parameter in operation.PathParameters %}{{ parameter.VariableName }},{% endfor %}} = queryParams;
 {% endif %}
 const getUrl = (function (this: { baseUrl: string }) {

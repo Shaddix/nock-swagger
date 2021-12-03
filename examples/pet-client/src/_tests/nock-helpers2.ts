@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-type CreateProductNockParameters = {};
-
 type DeleteProductNockParameters = {
   id: number | undefined;
 };
@@ -24,13 +22,7 @@ type GetProductNockParameters = {
 };
 
 export const ProductNock = {
-  create: (
-    queryParams: CreateProductNockParameters,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const {} = queryParams;
-
+  create: (requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/api/products';
       url_ = url_.replace(/[?&]$/, '');
@@ -41,17 +33,12 @@ export const ProductNock = {
   },
 
   createReply: (
-    queryParams: CreateProductNockParameters,
     response: IProductDto,
     removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const interceptor = ProductNock.create(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
+    const interceptor = ProductNock.create(requestBody, interceptorOptions);
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
@@ -280,10 +267,6 @@ export const SignUrlNock = {
   },
 };
 
-type PatchTestDataNockParameters = {};
-
-type FormDataTestDataNockParameters = {};
-
 export const TestDataNock = {
   /**
    * Demonstrates an error response.
@@ -355,13 +338,7 @@ export const TestDataNock = {
   /**
    * Tests RequiredOrUndefined attribute
    */
-  patch: (
-    queryParams: PatchTestDataNockParameters,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const {} = queryParams;
-
+  patch: (requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/patch';
       url_ = url_.replace(/[?&]$/, '');
@@ -375,17 +352,12 @@ export const TestDataNock = {
    * Tests RequiredOrUndefined attribute
    */
   patchReply: (
-    queryParams: PatchTestDataNockParameters,
     response: string,
     removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const interceptor = TestDataNock.patch(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
+    const interceptor = TestDataNock.patch(requestBody, interceptorOptions);
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
@@ -396,12 +368,9 @@ export const TestDataNock = {
    * Try this in browser with language set to DE
    */
   formData: (
-    queryParams: FormDataTestDataNockParameters,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const {} = queryParams;
-
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/formdata';
       url_ = url_.replace(/[?&]$/, '');
@@ -415,17 +384,12 @@ export const TestDataNock = {
    * Try this in browser with language set to DE
    */
   formDataReply: (
-    queryParams: FormDataTestDataNockParameters,
     response: string,
     removePreviousInterceptors = true,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const interceptor = TestDataNock.formData(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
+    const interceptor = TestDataNock.formData(requestBody, interceptorOptions);
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }

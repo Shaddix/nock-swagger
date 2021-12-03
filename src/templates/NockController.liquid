@@ -3,7 +3,7 @@
 {%- assign NockClassName = Class | prepend: 'Qqqqqq' | slice: 0, Class.size | append: "Nock" | slice: 6, 1000 -%}
 
 {%- for operation in Operations -%}
-{%-   if operation.Parameters.size > 0 -%}
+{%-   if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}
 
 {%- assign firstLetter = operation.ActualOperationName | slice: 0, 1 | upcase -%}
 {%- assign parameterClassName = operation.ActualOperationName | append: 'q' | slice: 1, operation.ActualOperationName.size | prepend: firstLetter | slice: 0, operation.ActualOperationName.size | append: NockClassName | append: 'Parameters' -%}
@@ -46,7 +46,7 @@ export const {{ NockClassName }} = {
   {%     endif -%}
    */
   {% endif -%}
-  {{ operation.ActualOperationName }}: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
+  {{ operation.ActualOperationName }}: ({%- if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
     {% template Path %}
     return nock(getBaseUrl())
       .{%- if operation.HttpMethodUpper == 'Get' -%}get
@@ -70,8 +70,8 @@ export const {{ NockClassName }} = {
   {%     endif -%}
    */
   {% endif -%}
-  {{ operation.ActualOperationName }}Reply: ({%- if operation.Parameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}response: {{ ResultType }}, removePreviousInterceptors = true, requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
-    const interceptor = {{ NockClassName }}.{{ operation.ActualOperationName }}({%- if operation.Parameters.size > 0 -%}queryParams, {% endif %}requestBody, interceptorOptions);
+  {{ operation.ActualOperationName }}Reply: ({%- if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}response: {{ ResultType }}, removePreviousInterceptors = true, requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
+    const interceptor = {{ NockClassName }}.{{ operation.ActualOperationName }}({%- if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}queryParams, {% endif %}requestBody, interceptorOptions);
     if (removePreviousInterceptors) {
       removeInterceptor(interceptor);
     }

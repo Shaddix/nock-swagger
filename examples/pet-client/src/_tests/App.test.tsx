@@ -56,16 +56,16 @@ test('get with query params', async () => {
 });
 
 describe('POST/PUT tests', () => {
-  it('POST', () => {
-    //Nock.addPet({});
+  it('POST', async () => {
+    Nock.addPet({});
     // Nock.placeOrderReply();
     // Nock.updatePet();
-    // QueryFactory.Query.Client.addPet(
-    //   new Pet({
-    //     name: 'asd',
-    //     photoUrls: ['123'],
-    //   }),
-    // );
+    const result = await QueryFactory.Query.Client.addPet(
+      new Pet({
+        name: 'asd',
+        photoUrls: ['123'],
+      }),
+    );
   });
 });
 

@@ -17,7 +17,7 @@
     "nswag"
   ],
   "scripts": {
-    "prepublish": "copyfiles -u 1 ../README.md ./"
+    "prepublish": "copyfiles -u 1 ../README.md ./ && yarn version --patch"
   },
   "bin": "cli.js",
   "devDependencies": {
