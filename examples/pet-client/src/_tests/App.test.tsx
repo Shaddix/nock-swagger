@@ -6,7 +6,11 @@ import { Category, Nock, Pet, PetStatus } from './nock-helpers';
 import nock from 'nock';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { QueryFactory } from '../api';
-import { Status } from '../api/axios-client';
+import { Order, Status } from '../api/axios-client';
+
+beforeEach(() => {
+  nock.cleanAll();
+});
 
 test('simple get without query params', async () => {
   Nock.getPetById({ petId: 1 })
@@ -149,11 +153,51 @@ describe('GET with reply based on parameters', () => {
     expect(result[0].name).toBe('asd2');
   });
 
-  // it('#3: set up response depending on query params GET request', async () => {
-  //   Nock.getPetById({ petId: 1 }).reply(200, { s: 'a' });
-  //   const result = await QueryFactory.Query.Client.getPetById(1);
-  //   expect(result.id).toBe(2);
-  // });
+  it('#3: set up response depending on query params GET request - simple', async () => {
+    Nock.getPetById({ petId: 1 }).reply(200, (uri, body) => {
+      console.log(uri, body);
+      return {
+        name: 'oo',
+        id: 2,
+      };
+    });
+    const result = await QueryFactory.Query.Client.getPetById(1);
+    expect(result.id).toBe(2);
+  });
+
+  it('#3: set up response depending on query params GET request', async () => {
+    Nock.getPetById({} as any)
+      .reply(200, (uri, body) => {
+        const petId = parseInt(uri.replace('/pet/', ''));
+        return {
+          name: 'oo',
+          id: petId + 1,
+        };
+      })
+      .persist();
+    const result = await QueryFactory.Query.Client.getPetById(1);
+    expect(result.id).toBe(2);
+
+    const result2 = await QueryFactory.Query.Client.getPetById(3);
+    expect(result2.id).toBe(4);
+  });
+
+  it('#3: set up response depending on body POST request', async () => {
+    Nock.placeOrder()
+      .reply(200, (uri, body) => {
+        return {
+          name: 'oo',
+          id: body.id! + 1,
+        };
+      })
+      .persist();
+    const result = await QueryFactory.Query.Client.placeOrder(
+      new Order({
+        id: 123,
+      }),
+    );
+    expect(result.id).toBe(124);
+  });
 });
 
 describe('interceptor removal tests', () => {

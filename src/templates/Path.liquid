@@ -1,11 +1,6 @@
 let url_ = "/{{ operation.Path }}";
 {% for parameter in operation.PathParameters -%}
-  {%     if parameter.IsRequired -%}
-    if (queryParams.{{ parameter.VariableName }} === undefined || queryParams.{{ parameter.VariableName }} === null)
-    throw new Error("The parameter 'queryParams.{{ parameter.VariableName }}' must be defined.");
-  {%     else -%}
     if (queryParams.{{ parameter.VariableName }} !== null && queryParams.{{ parameter.VariableName }} !== undefined)
-  {%     endif -%}
   {%     if parameter.IsDateOrDateTimeArray -%}
     url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent(queryParams.{{ parameter.VariableName }}.map(s_ => s_ ? s_.toJSON() : "null").join()));
     {%     elseif parameter.IsDateOrDateTime -%}
@@ -15,9 +10,7 @@ let url_ = "/{{ operation.Path }}";
   {%     else -%}
     url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent("" + queryParams.{{ parameter.VariableName }}));
   {%     endif -%}
-  {%     if parameter.IsOptional -%}
     else
-    url_ = url_.replace("/{{ "{" }}{{ parameter.Name }}}", "");
-  {%     endif -%}
+      url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", "");
 {% endfor -%}
 

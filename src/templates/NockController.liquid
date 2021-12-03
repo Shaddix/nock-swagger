@@ -73,10 +73,10 @@ export const {{ NockClassName }} = {
       replyFnWithCallback: (
         this: ReplyFnContext,
         uri: string,
-        body: {{ ResultType }},
+        body: {{ BodyParameterType |  default: 'Body' }},
         callback: (
           err: NodeJS.ErrnoException | null,
-          result: ReplyFnResult
+          result: ReplyFnResultGeneric<{{ ResultType }}>
         ) => void
       ) => void
     ): Scope
@@ -84,16 +84,16 @@ export const {{ NockClassName }} = {
       replyFn: (
         this: ReplyFnContext,
         uri: string,
-        body: {{ ResultType }}
-      ) => ReplyFnResult | Promise<ReplyFnResult>
+        body: {{ BodyParameterType |  default: 'Body' }},
+      ) => ReplyFnResultGeneric<{{ ResultType }}> | Promise<ReplyFnResultGeneric<{{ ResultType }}>>
     ): Scope
     reply(
       statusCode: StatusCode,
       replyBodyFnWithCallback: (
         this: ReplyFnContext,
         uri: string,
-        body: {{ ResultType }},
-        callback: (err: NodeJS.ErrnoException | null, result: ReplyBody) => void
+        body: {{ BodyParameterType |  default: 'Body' }},
+        callback: (err: NodeJS.ErrnoException | null, result: {{ ResultType }}) => void
       ) => void,
       headers?: ReplyHeaders
     ): Scope
@@ -102,8 +102,8 @@ export const {{ NockClassName }} = {
       replyBodyFn: (
         this: ReplyFnContext,
         uri: string,
-        body: {{ ResultType }}
-      ) => ReplyBody | Promise<ReplyBody>,
+        body: {{ BodyParameterType |  default: 'Body' }},
+      ) => {{ ResultType }} | Promise<{{ ResultType }}>,
       headers?: ReplyHeaders
     ): Scope
     reply(responseCode?: StatusCode, body?: {{ ResultType }}, headers?: ReplyHeaders): Scope
@@ -114,7 +114,7 @@ export const {{ NockClassName }} = {
 {%- elsif operation.HttpMethodUpper == 'Post' -%}post
 {%- elsif operation.HttpMethodUpper == 'Put' -%}put
 {%- elsif operation.HttpMethodUpper == 'Patch' -%}patch
-{%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(url_, requestBody as RequestBodyMatcher, interceptorOptions){%- if operation.QueryParameters.size > 0 -%}
+{%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(new RegExp('^' + url_), requestBody as RequestBodyMatcher, interceptorOptions){%- if operation.QueryParameters.size > 0 -%}
       .query({
 {%- for parameter in operation.QueryParameters -%}
           {{ parameter.VariableName }}: queryParams.{{ parameter.VariableName }} === null || queryParams.{{ parameter.VariableName }} === undefined ? /./

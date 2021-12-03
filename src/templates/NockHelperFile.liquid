@@ -34,3 +34,8 @@ Sets the base URL for http requests
 export function setBaseUrl(baseUrl: string) {
   _baseUrl = baseUrl;
 }
+
+type ReplyFnResultGeneric<T> =
+  | readonly [StatusCode]
+  | readonly [StatusCode, T]
+  | readonly [StatusCode, T, ReplyHeaders];
