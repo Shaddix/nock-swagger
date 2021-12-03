@@ -3,10 +3,11 @@ import { screen, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 
 import { mainRender } from './infrastructure';
-import { Category, Nock, Pet, PetStatus, Status } from './nock-helpers';
+import { Category, Nock, Pet, PetStatus } from './nock-helpers';
 import nock from 'nock';
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { QueryFactory } from '../api';
+import { Status } from '../api/axios-client';
 
 test('simple get without query params', async () => {
   Nock.getPetByIdReply(
@@ -98,6 +99,65 @@ describe('POST/PUT tests', () => {
       }),
     );
     expect(q).toBe(3);
+  });
+});
+
+describe('GET with reply based on parameters', () => {
+  it('parameters not specified - mock is still used', async () => {
+    Nock.findPetsByStatusReply(
+      {},
+      [
+        new Pet({
+          name: 'asd',
+          photoUrls: [],
+        }),
+      ],
+      true,
+    );
+    const result = await QueryFactory.Query.Client.findPetsByStatus([
+      Status.Available,
+    ]);
+    expect(result.length).toBe(1);
+    expect(result[0].name).toBe('asd');
+  });
+
+  it('array parameter with 2 items', async () => {
+    Nock.findPetsByStatusReply(
+      {
+        status: [Status.Available, Status.Sold],
+      },
+      [
+        new Pet({
+          name: 'asd1',
+          photoUrls: [],
+        }),
+      ],
+      true,
+    );
+    const result = await QueryFactory.Query.Client.findPetsByStatus([
+      Status.Available,
+      Status.Sold,
+    ]);
+    expect(result[0].name).toBe('asd1');
+  });
+
+  it('array parameter with 1 item', async () => {
+    Nock.findPetsByStatusReply(
+      {
+        status: [Status.Available],
+      },
+      [
+        new Pet({
+          name: 'asd2',
+          photoUrls: [],
+        }),
+      ],
+      true,
+    );
+    const result = await QueryFactory.Query.Client.findPetsByStatus([
+      Status.Available,
+    ]);
+    expect(result[0].name).toBe('asd2');
   });
 });
 

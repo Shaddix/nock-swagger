@@ -9,10 +9,10 @@
 {%- assign parameterClassName = operation.ActualOperationName | append: 'q' | slice: 1, operation.ActualOperationName.size | prepend: firstLetter | slice: 0, operation.ActualOperationName.size | append: NockClassName | append: 'Parameters' -%}
 type {{ parameterClassName }} = {
   {%- for parameter in operation.QueryParameters -%}
-  {{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }};
+  {{ parameter.VariableName }}?: {{ parameter.Type }}{{ parameter.TypePostfix }} | RegExp;
   {%- endfor -%}
   {%- for parameter in operation.PathParameters -%}
-    {{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }};
+  {{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }};
   {%- endfor -%}
 };
 
@@ -72,10 +72,27 @@ export const {{ NockClassName }} = {
     {% template Path %}
     return nock(getBaseUrl())
       .{%- if operation.HttpMethodUpper == 'Get' -%}get
-      {%- elsif operation.HttpMethodUpper == 'Post' -%}post
-      {%- elsif operation.HttpMethodUpper == 'Put' -%}put
-      {%- elsif operation.HttpMethodUpper == 'Patch' -%}patch
-      {%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(url, requestBody as RequestBodyMatcher, interceptorOptions);
+{%- elsif operation.HttpMethodUpper == 'Post' -%}post
+{%- elsif operation.HttpMethodUpper == 'Put' -%}put
+{%- elsif operation.HttpMethodUpper == 'Patch' -%}patch
+{%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(url_, requestBody as RequestBodyMatcher, interceptorOptions)
+{%- if operation.QueryParameters.size > 0 -%}
+      .query({
+{%- for parameter in operation.QueryParameters -%}
+          {{ parameter.VariableName }}: queryParams.{{ parameter.VariableName }} === null || queryParams.{{ parameter.VariableName }} === undefined ? /./
+            : queryParams.{{ parameter.VariableName }} instanceof RegExp ? queryParams.{{ parameter.VariableName }} :
+{%-     if parameter.IsDateOrDateTimeArray -%}
+          queryParams.{{ parameter.VariableName }}.length > 1 ? queryParams.{{ parameter.VariableName }}.map(item_ => encodeURIComponent(item_ ? "" + item_.toJSON() : "null")) : encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
+{%-     elseif parameter.IsDateOrDateTime -%}
+          encodeURIComponent(queryParams.{{ parameter.VariableName }}.toJSON()
+{%-     elseif parameter.IsArray -%}
+          queryParams.{{ parameter.VariableName }}.length > 1 ? queryParams.{{ parameter.VariableName }}.map(item => encodeURIComponent("" + item)) : encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
+{%-     else -%}
+          encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
+{%-     endif -%},
+{%- endfor -%}
+      })
+{%- endif -%};
   },
 
   {% if ResultType != 'void' %}

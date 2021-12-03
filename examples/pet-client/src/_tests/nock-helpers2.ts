@@ -1,16 +1,16 @@
 /* eslint-disable */
 
 type DeleteProductNockParameters = {
-  id: number | undefined;
+  id?: number | undefined | RegExp;
 };
 
 type SearchProductNockParameters = {
-  search: string | null | undefined;
-  productType: ProductType | null | undefined;
-  offset: number | null | undefined;
-  limit: number | null | undefined;
-  sortBy: string | null | undefined;
-  sortOrder: SortOrder | undefined;
+  search?: string | null | undefined | RegExp;
+  productType?: ProductType | null | undefined | RegExp;
+  offset?: number | null | undefined | RegExp;
+  limit?: number | null | undefined | RegExp;
+  sortBy?: string | null | undefined | RegExp;
+  sortOrder?: SortOrder | undefined | RegExp;
 };
 
 type PatchProductNockParameters = {
@@ -33,14 +33,9 @@ export const ProductNock = {
       | ((body: CreateProductDto) => boolean),
     interceptorOptions?: Options,
   ) => {
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/api/products';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/api/products';
     return nock(getBaseUrl()).post(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -64,22 +59,17 @@ export const ProductNock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const { id } = queryParams;
-
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/api/products?';
-      if (id === null) throw new Error("The parameter 'id' cannot be null.");
-      else if (id !== undefined)
-        url_ += 'id=' + encodeURIComponent('' + id) + '&';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
-    return nock(getBaseUrl()).delete(
-      url,
-      requestBody as RequestBodyMatcher,
-      interceptorOptions,
-    );
+    let url_ = '/api/products';
+    return nock(getBaseUrl())
+      .delete(url_, requestBody as RequestBodyMatcher, interceptorOptions)
+      .query({
+        id:
+          queryParams.id === null || queryParams.id === undefined
+            ? /./
+            : queryParams.id instanceof RegExp
+            ? queryParams.id
+            : encodeURIComponent('' + queryParams.id),
+      });
   },
 
   /**
@@ -89,34 +79,48 @@ export const ProductNock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const { search, productType, offset, limit, sortBy, sortOrder } =
-      queryParams;
-
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/api/products?';
-      if (search !== undefined && search !== null)
-        url_ += 'Search=' + encodeURIComponent('' + search) + '&';
-      if (productType !== undefined && productType !== null)
-        url_ += 'ProductType=' + encodeURIComponent('' + productType) + '&';
-      if (offset !== undefined && offset !== null)
-        url_ += 'Offset=' + encodeURIComponent('' + offset) + '&';
-      if (limit !== undefined && limit !== null)
-        url_ += 'Limit=' + encodeURIComponent('' + limit) + '&';
-      if (sortBy !== undefined && sortBy !== null)
-        url_ += 'SortBy=' + encodeURIComponent('' + sortBy) + '&';
-      if (sortOrder === null)
-        throw new Error("The parameter 'sortOrder' cannot be null.");
-      else if (sortOrder !== undefined)
-        url_ += 'SortOrder=' + encodeURIComponent('' + sortOrder) + '&';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
-    return nock(getBaseUrl()).get(
-      url,
-      requestBody as RequestBodyMatcher,
-      interceptorOptions,
-    );
+    let url_ = '/api/products';
+    return nock(getBaseUrl())
+      .get(url_, requestBody as RequestBodyMatcher, interceptorOptions)
+      .query({
+        search:
+          queryParams.search === null || queryParams.search === undefined
+            ? /./
+            : queryParams.search instanceof RegExp
+            ? queryParams.search
+            : encodeURIComponent('' + queryParams.search),
+        productType:
+          queryParams.productType === null ||
+          queryParams.productType === undefined
+            ? /./
+            : queryParams.productType instanceof RegExp
+            ? queryParams.productType
+            : encodeURIComponent('' + queryParams.productType),
+        offset:
+          queryParams.offset === null || queryParams.offset === undefined
+            ? /./
+            : queryParams.offset instanceof RegExp
+            ? queryParams.offset
+            : encodeURIComponent('' + queryParams.offset),
+        limit:
+          queryParams.limit === null || queryParams.limit === undefined
+            ? /./
+            : queryParams.limit instanceof RegExp
+            ? queryParams.limit
+            : encodeURIComponent('' + queryParams.limit),
+        sortBy:
+          queryParams.sortBy === null || queryParams.sortBy === undefined
+            ? /./
+            : queryParams.sortBy instanceof RegExp
+            ? queryParams.sortBy
+            : encodeURIComponent('' + queryParams.sortBy),
+        sortOrder:
+          queryParams.sortOrder === null || queryParams.sortOrder === undefined
+            ? /./
+            : queryParams.sortOrder instanceof RegExp
+            ? queryParams.sortOrder
+            : encodeURIComponent('' + queryParams.sortOrder),
+      });
   },
 
   /**
@@ -154,19 +158,12 @@ export const ProductNock = {
       | ((body: PatchProductDto) => boolean),
     interceptorOptions?: Options,
   ) => {
-    const { id } = queryParams;
-
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/api/products/{id}';
-      if (id === undefined || id === null)
-        throw new Error("The parameter 'id' must be defined.");
-      url_ = url_.replace('{id}', encodeURIComponent('' + id));
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/api/products/{id}';
+    if (queryParams.id === undefined || queryParams.id === null)
+      throw new Error("The parameter 'queryParams.id' must be defined.");
+    url_ = url_.replace('{id}', encodeURIComponent('' + queryParams.id));
     return nock(getBaseUrl()).patch(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -195,19 +192,12 @@ export const ProductNock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const { id } = queryParams;
-
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/api/products/{id}';
-      if (id === undefined || id === null)
-        throw new Error("The parameter 'id' must be defined.");
-      url_ = url_.replace('{id}', encodeURIComponent('' + id));
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/api/products/{id}';
+    if (queryParams.id === undefined || queryParams.id === null)
+      throw new Error("The parameter 'queryParams.id' must be defined.");
+    url_ = url_.replace('{id}', encodeURIComponent('' + queryParams.id));
     return nock(getBaseUrl()).get(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -245,19 +235,15 @@ export const OidcConfigurationNock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const { clientId } = queryParams;
-
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/_configuration/{clientId}';
-      if (clientId === undefined || clientId === null)
-        throw new Error("The parameter 'clientId' must be defined.");
-      url_ = url_.replace('{clientId}', encodeURIComponent('' + clientId));
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/_configuration/{clientId}';
+    if (queryParams.clientId === undefined || queryParams.clientId === null)
+      throw new Error("The parameter 'queryParams.clientId' must be defined.");
+    url_ = url_.replace(
+      '{clientId}',
+      encodeURIComponent('' + queryParams.clientId),
+    );
     return nock(getBaseUrl()).get(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -269,14 +255,9 @@ export const SignUrlNock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/api/sign-url/signature';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/api/sign-url/signature';
     return nock(getBaseUrl()).get(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -302,14 +283,9 @@ export const SignUrlNock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/api/sign-url/signature/cookie';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/api/sign-url/signature/cookie';
     return nock(getBaseUrl()).get(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -324,14 +300,9 @@ export const TestDataNock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/error-test';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/error-test';
     return nock(getBaseUrl()).get(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -363,14 +334,9 @@ export const TestDataNock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/send-email';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/send-email';
     return nock(getBaseUrl()).post(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -406,14 +372,9 @@ export const TestDataNock = {
       | ((body: TestPatchDto) => boolean),
     interceptorOptions?: Options,
   ) => {
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/patch';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/patch';
     return nock(getBaseUrl()).post(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -442,14 +403,9 @@ export const TestDataNock = {
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options,
   ) => {
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/formdata';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/formdata';
     return nock(getBaseUrl()).post(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -477,14 +433,9 @@ export const VersionNock = {
    * Gets the version of the service.
    */
   version: (requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/api';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
+    let url_ = '/api';
     return nock(getBaseUrl()).get(
-      url,
+      url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );

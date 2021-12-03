@@ -1,6 +1,6 @@
 # nock-swagger
 This projects autogenerates strongly typed methods to easily set up [nock](https://github.com/nock/nock) mocks for API calls based on Swagger API definitions.
-So, given that you have a [petstore-like API definition](https://petstore.swagger.io/), you could autogenerate a list of [nock helper methods](https://github.com/Shaddix/nock-swagger/blob/master/examples/pet-client/src/__tests__/nock-helpers.ts), to easily mock methods from the API.
+So, given that you have a [petstore-like API definition](https://petstore.swagger.io/), you could autogenerate a list of [nock helper methods](https://github.com/Shaddix/nock-swagger/blob/master/examples/pet-client/src/_tests/nock-helpers.ts), to easily mock methods from the API.
 
 
 ****This library requires, [dotnet runtime](https://dotnet.microsoft.com/download/dotnet/2.1) (2.1) installed on your machine! If you have .NET Core 3+ or 5+ you'll need to add a switch (e.g. /runtime:Net50) to all commands.****
