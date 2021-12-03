@@ -8,10 +8,23 @@ So, given that you have a [petstore-like API definition](https://petstore.swagge
 Check out [tests](https://github.com/Shaddix/nock-swagger/blob/963de857fd6abbe42ad1172f47cd118b2efe3a05/examples/pet-client/src/_tests/App.test.tsx#L11) for few examples.
 Shortly, mocking GET requests will look like this:
 ```ts
-Nock.getPetByIdReply({ id: 1 }, { id:1, name: 'mypet' });
+Nock.getPetById({ id: 1 } /* GET parameters with type & intellisense */)
+  .reply({ id:1, name: 'mypet' });
 ```
-It's not that different from the Nock itself, just that there's a separate method for every API endpoint with typed QueryParameters and typed Reply object (so, both `{ id: 1 }` and `{ id:1, name: 'mypet' }` have full intellisense and typecheck support.
+It's not that different from the Nock itself, just that:
+- you don't have to remember/write the URL (it will be filled in automatically)
+- you don't have to remember query parameters & their types (intellisense will help you)
+- you will have intellisense for Reply as well (so you know the shape of the object to return)
 
+Don't forget to set the base url by calling `setBaseUrl('https://localhost')`.
+Also go read the [nock docs](https://github.com/nock/nock#nock) if you have any problem regarding how Nock works.
+
+## Perks
+### Auto-removing old interceptors 
+Nock by default doesn't remove the 'old' interceptors when you define a new one for the same route/query params.
+It wasn't convenient for me, so nock-swagger removes old interceptors by default.
+If you want to preserve previously configured interceptors for the same root (God knows why are you adding a new Interceptor if you don't want it to work, but still),
+you need to pass `preservePreviousInterceptors: true` as part of `interceptorOptions` (usually 3rd argument of every nock setup call).
 
 ## How to add
 Install the package into your project using yarn/npm (as a dev-dependency). You'll also need to add react-query (which you probably already have if you are interested in this library).

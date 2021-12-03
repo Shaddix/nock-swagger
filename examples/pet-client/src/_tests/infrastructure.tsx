@@ -7,9 +7,11 @@ import { setBaseUrl } from './nock-helpers';
 import axios from 'axios';
 
 axios.defaults.adapter = require('axios/lib/adapters/http');
+setBaseUrl('https://localhost');
+
 QueryFactory.setBaseUrl('https://localhost');
 QueryFactory.setAxiosFactory(() => axios);
-setBaseUrl('https://localhost');
+
 const queryClient = new QueryClient();
 
 export function mainRender() {
