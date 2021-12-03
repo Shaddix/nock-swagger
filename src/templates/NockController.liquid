@@ -22,6 +22,15 @@ type {{ parameterClassName }} = {
 export const {{ NockClassName }} = {
 {%- for operation in Operations -%}
 {%- if operation.HttpMethodUpper == 'Get' or operation.HttpMethodUpper == 'Post' or operation.HttpMethodUpper == 'Put' or operation.HttpMethodUpper == 'Patch' or operation.HttpMethodUpper == 'Delete' -%}
+  {%- assign BodyParameterName = '' -%}
+  {%- assign BodyParameterType = '' -%}
+  {%- for parameter in operation.Parameters -%}
+    {% if parameter.IsBody %}
+      {%- assign BodyParameterName = parameter.VariableName -%}
+      {%- assign BodyParameterType = parameter.Type | append: parameter.TypePostfix  -%}
+    {% endif %}
+  {%- endfor -%}
+
   {%- assign ResultType = operation.ResultType -%}
   {%- assign UseInterfaceResult = false -%}
   {%- if ResultType != 'string' and ResultType != 'number' and ResultType != 'boolean' and ResultType != 'Date' and ResultType != 'void' -%}
@@ -46,14 +55,27 @@ export const {{ NockClassName }} = {
   {%     endif -%}
    */
   {% endif -%}
-  {{ operation.ActualOperationName }}: ({%- if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
+  {{ operation.ActualOperationName }}: (
+  {%- if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}queryParams: {{ parameterClassName }}, {%- endif -%}
+  requestBody?:  {%- if BodyParameterType != '' -%}
+    | string
+    | Buffer
+    | RegExp
+    | DataMatcherArray
+    | DataMatcherMap
+    | {{ BodyParameterType }}
+    | ((body: {{ BodyParameterType }}) => boolean),
+  {%- else -%}
+    RequestBodyMatcher,
+  {%- endif -%}
+  interceptorOptions?: Options) => {
     {% template Path %}
     return nock(getBaseUrl())
       .{%- if operation.HttpMethodUpper == 'Get' -%}get
       {%- elsif operation.HttpMethodUpper == 'Post' -%}post
       {%- elsif operation.HttpMethodUpper == 'Put' -%}put
       {%- elsif operation.HttpMethodUpper == 'Patch' -%}patch
-      {%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(url, requestBody, interceptorOptions);
+      {%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(url, requestBody as RequestBodyMatcher, interceptorOptions);
   },
 
   {% if ResultType != 'void' %}

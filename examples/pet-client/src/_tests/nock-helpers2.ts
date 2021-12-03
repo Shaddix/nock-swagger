@@ -22,14 +22,28 @@ type GetProductNockParameters = {
 };
 
 export const ProductNock = {
-  create: (requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
+  create: (
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | CreateProductDto
+      | ((body: CreateProductDto) => boolean),
+    interceptorOptions?: Options,
+  ) => {
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/api/products';
       url_ = url_.replace(/[?&]$/, '');
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   createReply: (
@@ -61,7 +75,11 @@ export const ProductNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).delete(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).delete(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -94,7 +112,11 @@ export const ProductNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -122,7 +144,14 @@ export const ProductNock = {
 
   patch: (
     queryParams: PatchProductNockParameters,
-    requestBody?: RequestBodyMatcher,
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | PatchProductDto
+      | ((body: PatchProductDto) => boolean),
     interceptorOptions?: Options,
   ) => {
     const { id } = queryParams;
@@ -136,7 +165,11 @@ export const ProductNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).patch(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).patch(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   patchReply: (
@@ -173,7 +206,11 @@ export const ProductNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   getReply: (
@@ -219,7 +256,11 @@ export const OidcConfigurationNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 };
 
@@ -234,7 +275,11 @@ export const SignUrlNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   getSignatureReply: (
@@ -263,7 +308,11 @@ export const SignUrlNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 };
 
@@ -281,7 +330,11 @@ export const TestDataNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -316,7 +369,11 @@ export const TestDataNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -338,14 +395,28 @@ export const TestDataNock = {
   /**
    * Tests RequiredOrUndefined attribute
    */
-  patch: (requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
+  patch: (
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | TestPatchDto
+      | ((body: TestPatchDto) => boolean),
+    interceptorOptions?: Options,
+  ) => {
     const getUrl = function (this: { baseUrl: string }) {
       let url_ = this.baseUrl + '/patch';
       url_ = url_.replace(/[?&]$/, '');
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -377,7 +448,11 @@ export const TestDataNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -408,7 +483,11 @@ export const VersionNock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -864,7 +943,13 @@ export interface ITestPatchDto {
   value: string;
 }
 
-import nock, { Options, RequestBodyMatcher, Interceptor } from 'nock';
+import nock, {
+  Options,
+  RequestBodyMatcher,
+  Interceptor,
+  DataMatcherArray,
+  DataMatcherMap,
+} from 'nock';
 
 /*
 Removes passed interceptor from Nock

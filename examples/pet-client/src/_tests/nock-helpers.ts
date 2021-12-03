@@ -69,7 +69,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -97,21 +101,15 @@ export const Nock = {
   /**
    * Add a new pet to the store
    */
-  addPet: (requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
-    const getUrl = function (this: { baseUrl: string }) {
-      let url_ = this.baseUrl + '/pet';
-      url_ = url_.replace(/[?&]$/, '');
-      return url_;
-    }.bind({ baseUrl: '' });
-    const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
-  },
-
-  /**
-   * Update an existing pet
-   */
-  updatePet: (
-    requestBody?: RequestBodyMatcher,
+  addPet: (
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | Pet
+      | ((body: Pet) => boolean),
     interceptorOptions?: Options,
   ) => {
     const getUrl = function (this: { baseUrl: string }) {
@@ -120,7 +118,38 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).put(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
+  },
+
+  /**
+   * Update an existing pet
+   */
+  updatePet: (
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | Pet
+      | ((body: Pet) => boolean),
+    interceptorOptions?: Options,
+  ) => {
+    const getUrl = function (this: { baseUrl: string }) {
+      let url_ = this.baseUrl + '/pet';
+      url_ = url_.replace(/[?&]$/, '');
+      return url_;
+    }.bind({ baseUrl: '' });
+    const url = getUrl();
+    return nock(getBaseUrl()).put(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -148,7 +177,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -199,7 +232,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -244,7 +281,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -288,7 +329,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -310,7 +355,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).delete(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).delete(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -326,7 +375,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -350,7 +403,14 @@ export const Nock = {
    * Place an order for a pet
    */
   placeOrder: (
-    requestBody?: RequestBodyMatcher,
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | Order
+      | ((body: Order) => boolean),
     interceptorOptions?: Options,
   ) => {
     const getUrl = function (this: { baseUrl: string }) {
@@ -359,7 +419,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -398,7 +462,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -442,14 +510,25 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).delete(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).delete(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
    * Creates list of users with given input array
    */
   createUsersWithListInput: (
-    requestBody?: RequestBodyMatcher,
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | User[]
+      | ((body: User[]) => boolean),
     interceptorOptions?: Options,
   ) => {
     const getUrl = function (this: { baseUrl: string }) {
@@ -458,7 +537,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -480,7 +563,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -510,7 +597,14 @@ export const Nock = {
    */
   updateUser: (
     queryParams: UpdateUserNockParameters,
-    requestBody?: RequestBodyMatcher,
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | User
+      | ((body: User) => boolean),
     interceptorOptions?: Options,
   ) => {
     const { username } = queryParams;
@@ -524,7 +618,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).put(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).put(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -546,7 +644,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).delete(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).delete(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -575,7 +677,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
@@ -613,14 +719,25 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).get(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).get(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
    * Creates list of users with given input array
    */
   createUsersWithArrayInput: (
-    requestBody?: RequestBodyMatcher,
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | User[]
+      | ((body: User[]) => boolean),
     interceptorOptions?: Options,
   ) => {
     const getUrl = function (this: { baseUrl: string }) {
@@ -629,14 +746,25 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 
   /**
    * Create user
    */
   createUser: (
-    requestBody?: RequestBodyMatcher,
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | User
+      | ((body: User) => boolean),
     interceptorOptions?: Options,
   ) => {
     const getUrl = function (this: { baseUrl: string }) {
@@ -645,7 +773,11 @@ export const Nock = {
       return url_;
     }.bind({ baseUrl: '' });
     const url = getUrl();
-    return nock(getBaseUrl()).post(url, requestBody, interceptorOptions);
+    return nock(getBaseUrl()).post(
+      url,
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
   },
 };
 
@@ -994,7 +1126,13 @@ export enum OrderStatus {
   Delivered = 'delivered',
 }
 
-import nock, { Options, RequestBodyMatcher, Interceptor } from 'nock';
+import nock, {
+  Options,
+  RequestBodyMatcher,
+  Interceptor,
+  DataMatcherArray,
+  DataMatcherMap,
+} from 'nock';
 
 /*
 Removes passed interceptor from Nock

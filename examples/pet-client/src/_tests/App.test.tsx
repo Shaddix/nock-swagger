@@ -56,16 +56,48 @@ test('get with query params', async () => {
 });
 
 describe('POST/PUT tests', () => {
-  it('POST', async () => {
-    Nock.addPet({});
-    // Nock.placeOrderReply();
-    // Nock.updatePet();
-    const result = await QueryFactory.Query.Client.addPet(
+  it('POST simple', async () => {
+    let q = 0;
+    Nock.addPet().reply(() => {
+      q = 1;
+      return [200];
+    });
+    await QueryFactory.Query.Client.addPet(
       new Pet({
         name: 'asd',
         photoUrls: ['123'],
       }),
     );
+    expect(q).toBe(1);
+  });
+  it('POST with body matcher', async () => {
+    let q = 0;
+    Nock.addPet({ name: 'asd', photoUrls: ['123'] }).reply(() => {
+      q = 2;
+      return [200];
+    });
+    await QueryFactory.Query.Client.addPet(
+      new Pet({
+        name: 'asd',
+        photoUrls: ['123'],
+      }),
+    );
+    expect(q).toBe(2);
+  });
+
+  it('POST with body matcher function', async () => {
+    let q = 0;
+    Nock.addPet((body) => body.name === 'asd').reply(() => {
+      q = 3;
+      return [200];
+    });
+    await QueryFactory.Query.Client.addPet(
+      new Pet({
+        name: 'asd',
+        photoUrls: ['123'],
+      }),
+    );
+    expect(q).toBe(3);
   });
 });
 
