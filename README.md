@@ -4,6 +4,14 @@ So, given that you have a [petstore-like API definition](https://petstore.swagge
 
 
 ****This library requires, [dotnet runtime](https://dotnet.microsoft.com/download/dotnet/2.1) (2.1) installed on your machine! If you have .NET Core 3+ or 5+ you'll need to add a switch (e.g. /runtime:Net50) to all commands.****
+## How to use
+Check out [tests](https://github.com/Shaddix/nock-swagger/blob/963de857fd6abbe42ad1172f47cd118b2efe3a05/examples/pet-client/src/_tests/App.test.tsx#L11) for few examples.
+Shortly, mocking GET requests will look like this:
+```ts
+Nock.getPetByIdReply({ id: 1 }, { id:1, name: 'mypet' });
+```
+It's not that different from the Nock itself, just that there's a separate method for every API endpoint with typed QueryParameters and typed Reply object (so, both `{ id: 1 }` and `{ id:1, name: 'mypet' }` have full intellisense and typecheck support.
+
 
 ## How to add
 Install the package into your project using yarn/npm (as a dev-dependency). You'll also need to add react-query (which you probably already have if you are interested in this library).
