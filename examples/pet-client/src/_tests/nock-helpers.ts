@@ -56,39 +56,67 @@ export const Nock = {
   uploadFile: (
     queryParams: UploadFileNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IApiResponse,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IApiResponse,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IApiResponse,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IApiResponse,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: IApiResponse,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/pet/{petId}/uploadImage';
     if (queryParams.petId === undefined || queryParams.petId === null)
       throw new Error("The parameter 'queryParams.petId' must be defined.");
     url_ = url_.replace('{petId}', encodeURIComponent('' + queryParams.petId));
-    return nock(getBaseUrl()).post(
+    const interceptor = nock(getBaseUrl()).post(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
-  },
-
-  /**
-   * uploads an image
-   * @param response successful operation
-   */
-  uploadFileReply: (
-    queryParams: UploadFileNockParameters,
-    response: IApiResponse,
-    removePreviousInterceptors = true,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const interceptor = Nock.uploadFile(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
-    if (removePreviousInterceptors) {
+    if (!interceptorOptions?.preservePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, new ApiResponse(response));
+    return interceptor as any;
   },
 
   /**
@@ -103,14 +131,64 @@ export const Nock = {
       | DataMatcherMap
       | Pet
       | ((body: Pet) => boolean),
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/pet';
-    return nock(getBaseUrl()).post(
+    const interceptor = nock(getBaseUrl()).post(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 
   /**
@@ -125,14 +203,64 @@ export const Nock = {
       | DataMatcherMap
       | Pet
       | ((body: Pet) => boolean),
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/pet';
-    return nock(getBaseUrl()).put(
+    const interceptor = nock(getBaseUrl()).put(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 
   /**
@@ -141,10 +269,56 @@ export const Nock = {
   findPetsByStatus: (
     queryParams: FindPetsByStatusNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Pet[],
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Pet[],
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Pet[],
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Pet[],
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: Pet[],
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/pet/findByStatus';
-    return nock(getBaseUrl())
+    const interceptor = nock(getBaseUrl())
       .get(url_, requestBody as RequestBodyMatcher, interceptorOptions)
       .query({
         status:
@@ -156,28 +330,10 @@ export const Nock = {
             ? queryParams.status.map((item) => encodeURIComponent('' + item))
             : encodeURIComponent('' + queryParams.status),
       });
-  },
-
-  /**
-   * Finds Pets by status
-   * @param response successful operation
-   */
-  findPetsByStatusReply: (
-    queryParams: FindPetsByStatusNockParameters,
-    response: Pet[],
-    removePreviousInterceptors = true,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const interceptor = Nock.findPetsByStatus(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
-    if (removePreviousInterceptors) {
+    if (!interceptorOptions?.preservePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, response);
+    return interceptor as any;
   },
 
   /**
@@ -187,10 +343,56 @@ export const Nock = {
   findPetsByTags: (
     queryParams: FindPetsByTagsNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Pet[],
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Pet[],
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Pet[],
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Pet[],
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: Pet[],
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/pet/findByTags';
-    return nock(getBaseUrl())
+    const interceptor = nock(getBaseUrl())
       .get(url_, requestBody as RequestBodyMatcher, interceptorOptions)
       .query({
         tags:
@@ -202,29 +404,10 @@ export const Nock = {
             ? queryParams.tags.map((item) => encodeURIComponent('' + item))
             : encodeURIComponent('' + queryParams.tags),
       });
-  },
-
-  /**
-   * Finds Pets by tags
-   * @param response successful operation
-   * @deprecated
-   */
-  findPetsByTagsReply: (
-    queryParams: FindPetsByTagsNockParameters,
-    response: Pet[],
-    removePreviousInterceptors = true,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const interceptor = Nock.findPetsByTags(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
-    if (removePreviousInterceptors) {
+    if (!interceptorOptions?.preservePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, response);
+    return interceptor as any;
   },
 
   /**
@@ -233,39 +416,67 @@ export const Nock = {
   getPetById: (
     queryParams: GetPetByIdNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IPet,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IPet,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IPet,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IPet,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: IPet,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/pet/{petId}';
     if (queryParams.petId === undefined || queryParams.petId === null)
       throw new Error("The parameter 'queryParams.petId' must be defined.");
     url_ = url_.replace('{petId}', encodeURIComponent('' + queryParams.petId));
-    return nock(getBaseUrl()).get(
+    const interceptor = nock(getBaseUrl()).get(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
-  },
-
-  /**
-   * Find pet by ID
-   * @param response successful operation
-   */
-  getPetByIdReply: (
-    queryParams: GetPetByIdNockParameters,
-    response: IPet,
-    removePreviousInterceptors = true,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const interceptor = Nock.getPetById(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
-    if (removePreviousInterceptors) {
+    if (!interceptorOptions?.preservePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, new Pet(response));
+    return interceptor as any;
   },
 
   /**
@@ -274,17 +485,67 @@ export const Nock = {
   updatePetWithForm: (
     queryParams: UpdatePetWithFormNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/pet/{petId}';
     if (queryParams.petId === undefined || queryParams.petId === null)
       throw new Error("The parameter 'queryParams.petId' must be defined.");
     url_ = url_.replace('{petId}', encodeURIComponent('' + queryParams.petId));
-    return nock(getBaseUrl()).post(
+    const interceptor = nock(getBaseUrl()).post(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 
   /**
@@ -293,17 +554,67 @@ export const Nock = {
   deletePet: (
     queryParams: DeletePetNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/pet/{petId}';
     if (queryParams.petId === undefined || queryParams.petId === null)
       throw new Error("The parameter 'queryParams.petId' must be defined.");
     url_ = url_.replace('{petId}', encodeURIComponent('' + queryParams.petId));
-    return nock(getBaseUrl()).delete(
+    const interceptor = nock(getBaseUrl()).delete(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 
   /**
@@ -311,31 +622,64 @@ export const Nock = {
    */
   getInventory: (
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: { [key: string]: number },
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: { [key: string]: number },
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: { [key: string]: number },
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: { [key: string]: number },
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: { [key: string]: number },
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/store/inventory';
-    return nock(getBaseUrl()).get(
+    const interceptor = nock(getBaseUrl()).get(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
-  },
-
-  /**
-   * Returns pet inventories by status
-   * @param response successful operation
-   */
-  getInventoryReply: (
-    response: { [key: string]: number },
-    removePreviousInterceptors = true,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const interceptor = Nock.getInventory(requestBody, interceptorOptions);
-    if (removePreviousInterceptors) {
+    if (!interceptorOptions?.preservePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, response);
+    return interceptor as any;
   },
 
   /**
@@ -350,31 +694,64 @@ export const Nock = {
       | DataMatcherMap
       | Order
       | ((body: Order) => boolean),
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IOrder,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IOrder,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IOrder,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IOrder,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: IOrder,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/store/order';
-    return nock(getBaseUrl()).post(
+    const interceptor = nock(getBaseUrl()).post(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
-  },
-
-  /**
-   * Place an order for a pet
-   * @param response successful operation
-   */
-  placeOrderReply: (
-    response: IOrder,
-    removePreviousInterceptors = true,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const interceptor = Nock.placeOrder(requestBody, interceptorOptions);
-    if (removePreviousInterceptors) {
+    if (!interceptorOptions?.preservePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, new Order(response));
+    return interceptor as any;
   },
 
   /**
@@ -383,8 +760,54 @@ export const Nock = {
   getOrderById: (
     queryParams: GetOrderByIdNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IOrder,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IOrder,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IOrder,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IOrder,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: IOrder,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/store/order/{orderId}';
     if (queryParams.orderId === undefined || queryParams.orderId === null)
       throw new Error("The parameter 'queryParams.orderId' must be defined.");
@@ -392,33 +815,15 @@ export const Nock = {
       '{orderId}',
       encodeURIComponent('' + queryParams.orderId),
     );
-    return nock(getBaseUrl()).get(
+    const interceptor = nock(getBaseUrl()).get(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
-  },
-
-  /**
-   * Find purchase order by ID
-   * @param response successful operation
-   */
-  getOrderByIdReply: (
-    queryParams: GetOrderByIdNockParameters,
-    response: IOrder,
-    removePreviousInterceptors = true,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const interceptor = Nock.getOrderById(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
-    if (removePreviousInterceptors) {
+    if (!interceptorOptions?.preservePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, new Order(response));
+    return interceptor as any;
   },
 
   /**
@@ -427,8 +832,54 @@ export const Nock = {
   deleteOrder: (
     queryParams: DeleteOrderNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/store/order/{orderId}';
     if (queryParams.orderId === undefined || queryParams.orderId === null)
       throw new Error("The parameter 'queryParams.orderId' must be defined.");
@@ -436,11 +887,15 @@ export const Nock = {
       '{orderId}',
       encodeURIComponent('' + queryParams.orderId),
     );
-    return nock(getBaseUrl()).delete(
+    const interceptor = nock(getBaseUrl()).delete(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 
   /**
@@ -455,14 +910,64 @@ export const Nock = {
       | DataMatcherMap
       | User[]
       | ((body: User[]) => boolean),
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/user/createWithList';
-    return nock(getBaseUrl()).post(
+    const interceptor = nock(getBaseUrl()).post(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 
   /**
@@ -471,8 +976,54 @@ export const Nock = {
   getUserByName: (
     queryParams: GetUserByNameNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IUser,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IUser,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IUser,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: IUser,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: IUser,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/user/{username}';
     if (queryParams.username === undefined || queryParams.username === null)
       throw new Error("The parameter 'queryParams.username' must be defined.");
@@ -480,33 +1031,15 @@ export const Nock = {
       '{username}',
       encodeURIComponent('' + queryParams.username),
     );
-    return nock(getBaseUrl()).get(
+    const interceptor = nock(getBaseUrl()).get(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
-  },
-
-  /**
-   * Get user by user name
-   * @param response successful operation
-   */
-  getUserByNameReply: (
-    queryParams: GetUserByNameNockParameters,
-    response: IUser,
-    removePreviousInterceptors = true,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const interceptor = Nock.getUserByName(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
-    if (removePreviousInterceptors) {
+    if (!interceptorOptions?.preservePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, new User(response));
+    return interceptor as any;
   },
 
   /**
@@ -522,8 +1055,54 @@ export const Nock = {
       | DataMatcherMap
       | User
       | ((body: User) => boolean),
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/user/{username}';
     if (queryParams.username === undefined || queryParams.username === null)
       throw new Error("The parameter 'queryParams.username' must be defined.");
@@ -531,11 +1110,15 @@ export const Nock = {
       '{username}',
       encodeURIComponent('' + queryParams.username),
     );
-    return nock(getBaseUrl()).put(
+    const interceptor = nock(getBaseUrl()).put(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 
   /**
@@ -544,8 +1127,54 @@ export const Nock = {
   deleteUser: (
     queryParams: DeleteUserNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/user/{username}';
     if (queryParams.username === undefined || queryParams.username === null)
       throw new Error("The parameter 'queryParams.username' must be defined.");
@@ -553,11 +1182,15 @@ export const Nock = {
       '{username}',
       encodeURIComponent('' + queryParams.username),
     );
-    return nock(getBaseUrl()).delete(
+    const interceptor = nock(getBaseUrl()).delete(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 
   /**
@@ -566,10 +1199,56 @@ export const Nock = {
   loginUser: (
     queryParams: LoginUserNockParameters,
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: string,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: string,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: string,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: string,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: string,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/user/login';
-    return nock(getBaseUrl())
+    const interceptor = nock(getBaseUrl())
       .get(url_, requestBody as RequestBodyMatcher, interceptorOptions)
       .query({
         username:
@@ -585,28 +1264,10 @@ export const Nock = {
             ? queryParams.password
             : encodeURIComponent('' + queryParams.password),
       });
-  },
-
-  /**
-   * Logs user into the system
-   * @param response successful operation
-   */
-  loginUserReply: (
-    queryParams: LoginUserNockParameters,
-    response: string,
-    removePreviousInterceptors = true,
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
-    const interceptor = Nock.loginUser(
-      queryParams,
-      requestBody,
-      interceptorOptions,
-    );
-    if (removePreviousInterceptors) {
+    if (!interceptorOptions?.preservePreviousInterceptors) {
       removeInterceptor(interceptor);
     }
-    return interceptor.reply(200, response);
+    return interceptor as any;
   },
 
   /**
@@ -614,14 +1275,64 @@ export const Nock = {
    */
   logoutUser: (
     requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/user/logout';
-    return nock(getBaseUrl()).get(
+    const interceptor = nock(getBaseUrl()).get(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 
   /**
@@ -636,14 +1347,64 @@ export const Nock = {
       | DataMatcherMap
       | User[]
       | ((body: User[]) => boolean),
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/user/createWithArray';
-    return nock(getBaseUrl()).post(
+    const interceptor = nock(getBaseUrl()).post(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 
   /**
@@ -658,14 +1419,64 @@ export const Nock = {
       | DataMatcherMap
       | User
       | ((body: User) => boolean),
-    interceptorOptions?: Options,
-  ) => {
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyFnResult | Promise<ReplyFnResult>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyBody,
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: void,
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
     let url_ = '/user';
-    return nock(getBaseUrl()).post(
+    const interceptor = nock(getBaseUrl()).post(
       url_,
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
   },
 };
 
@@ -1020,6 +1831,12 @@ import nock, {
   Interceptor,
   DataMatcherArray,
   DataMatcherMap,
+  ReplyHeaders,
+  ReplyFnContext,
+  ReplyFnResult,
+  ReplyBody,
+  Scope,
+  StatusCode,
 } from 'nock';
 
 /*

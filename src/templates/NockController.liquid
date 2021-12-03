@@ -68,15 +68,53 @@ export const {{ NockClassName }} = {
   {%- else -%}
     RequestBodyMatcher,
   {%- endif -%}
-  interceptorOptions?: Options) => {
+  interceptorOptions?: Options & { preservePreviousInterceptors?: boolean }) : Omit<Interceptor, 'reply'> & {
+	reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: {{ ResultType }},
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResult
+        ) => void
+      ) => void
+    ): Scope
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: {{ ResultType }}
+      ) => ReplyFnResult | Promise<ReplyFnResult>
+    ): Scope
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: {{ ResultType }},
+        callback: (err: NodeJS.ErrnoException | null, result: ReplyBody) => void
+      ) => void,
+      headers?: ReplyHeaders
+    ): Scope
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: {{ ResultType }}
+      ) => ReplyBody | Promise<ReplyBody>,
+      headers?: ReplyHeaders
+    ): Scope
+    reply(responseCode?: StatusCode, body?: {{ ResultType }}, headers?: ReplyHeaders): Scope
+} => {
     {% template Path %}
-    return nock(getBaseUrl())
+    const interceptor = nock(getBaseUrl())
       .{%- if operation.HttpMethodUpper == 'Get' -%}get
 {%- elsif operation.HttpMethodUpper == 'Post' -%}post
 {%- elsif operation.HttpMethodUpper == 'Put' -%}put
 {%- elsif operation.HttpMethodUpper == 'Patch' -%}patch
-{%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(url_, requestBody as RequestBodyMatcher, interceptorOptions)
-{%- if operation.QueryParameters.size > 0 -%}
+{%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(url_, requestBody as RequestBodyMatcher, interceptorOptions){%- if operation.QueryParameters.size > 0 -%}
       .query({
 {%- for parameter in operation.QueryParameters -%}
           {{ parameter.VariableName }}: queryParams.{{ parameter.VariableName }} === null || queryParams.{{ parameter.VariableName }} === undefined ? /./
@@ -91,32 +129,14 @@ export const {{ NockClassName }} = {
           encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
 {%-     endif -%},
 {%- endfor -%}
-      })
-{%- endif -%};
+      }){%- endif -%};
+      if (!interceptorOptions?.preservePreviousInterceptors) {
+        removeInterceptor(interceptor);
+      }
+      return interceptor as any;
   },
 
-  {% if ResultType != 'void' %}
-  {% if operation.HasDocumentation -%}
-  /**
-  {%     if operation.HasSummary -%}
-   * {{ operation.Summary }}
-  {%     endif -%}
-  {%     if operation.HasResultDescription -%}
-   * @param response {{ operation.ResultDescription }}
-  {%     endif -%}
-  {%     if operation.IsDeprecated -%}
-   * @deprecated
-  {%     endif -%}
-   */
-  {% endif -%}
-  {{ operation.ActualOperationName }}Reply: ({%- if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}queryParams: {{ parameterClassName }}, {% endif %}response: {{ ResultType }}, removePreviousInterceptors = true, requestBody?: RequestBodyMatcher, interceptorOptions?: Options) => {
-    const interceptor = {{ NockClassName }}.{{ operation.ActualOperationName }}({%- if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}queryParams, {% endif %}requestBody, interceptorOptions);
-    if (removePreviousInterceptors) {
-      removeInterceptor(interceptor);
-    }
-    return interceptor.reply(200, {% if UseInterfaceResult %}new {{ OriginalResultType  }}(response){% else %}response{% endif %});
-  },
-  {% endif %}
+
 {% endif -%}
 {% endfor -%}
 }

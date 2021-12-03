@@ -1,7 +1,6 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
-
 import { mainRender } from './infrastructure';
 import { Category, Nock, Pet, PetStatus } from './nock-helpers';
 import nock from 'nock';
@@ -10,20 +9,22 @@ import { QueryFactory } from '../api';
 import { Status } from '../api/axios-client';
 
 test('simple get without query params', async () => {
-  Nock.getPetByIdReply(
-    { petId: 1 },
-    new Pet({
-      status: PetStatus.Pending,
-      id: 1,
-      category: new Category({
-        id: 2,
-        name: 'category',
+  Nock.getPetById({ petId: 1 })
+    .reply(
+      200,
+      new Pet({
+        status: PetStatus.Pending,
+        id: 1,
+        category: new Category({
+          id: 2,
+          name: 'category',
+        }),
+        tags: [],
+        name: 'learn react',
+        photoUrls: [],
       }),
-      tags: [],
-      name: 'learn react',
-      photoUrls: [],
-    }),
-  ).persist();
+    )
+    .persist();
 
   mainRender();
   await waitFor(() => {
@@ -34,7 +35,7 @@ test('simple get without query params', async () => {
 });
 
 test('get with query params', async () => {
-  Nock.findPetsByStatusReply({ status: [Status.Pending] }, [
+  Nock.findPetsByStatus({ status: [Status.Pending] }).reply(200, [
     new Pet({
       status: PetStatus.Pending,
       id: 1,
@@ -104,16 +105,12 @@ describe('POST/PUT tests', () => {
 
 describe('GET with reply based on parameters', () => {
   it('parameters not specified - mock is still used', async () => {
-    Nock.findPetsByStatusReply(
-      {},
-      [
-        new Pet({
-          name: 'asd',
-          photoUrls: [],
-        }),
-      ],
-      true,
-    );
+    Nock.findPetsByStatus({}).reply(200, [
+      new Pet({
+        name: 'asd',
+        photoUrls: [],
+      }),
+    ]);
     const result = await QueryFactory.Query.Client.findPetsByStatus([
       Status.Available,
     ]);
@@ -122,18 +119,14 @@ describe('GET with reply based on parameters', () => {
   });
 
   it('array parameter with 2 items', async () => {
-    Nock.findPetsByStatusReply(
-      {
-        status: [Status.Available, Status.Sold],
-      },
-      [
-        new Pet({
-          name: 'asd1',
-          photoUrls: [],
-        }),
-      ],
-      true,
-    );
+    Nock.findPetsByStatus({
+      status: [Status.Available, Status.Sold],
+    }).reply(200, [
+      new Pet({
+        name: 'asd1',
+        photoUrls: [],
+      }),
+    ]);
     const result = await QueryFactory.Query.Client.findPetsByStatus([
       Status.Available,
       Status.Sold,
@@ -142,23 +135,25 @@ describe('GET with reply based on parameters', () => {
   });
 
   it('array parameter with 1 item', async () => {
-    Nock.findPetsByStatusReply(
-      {
-        status: [Status.Available],
-      },
-      [
-        new Pet({
-          name: 'asd2',
-          photoUrls: [],
-        }),
-      ],
-      true,
-    );
+    Nock.findPetsByStatus({
+      status: [Status.Available],
+    }).reply(200, [
+      new Pet({
+        name: 'asd2',
+        photoUrls: [],
+      }),
+    ]);
     const result = await QueryFactory.Query.Client.findPetsByStatus([
       Status.Available,
     ]);
     expect(result[0].name).toBe('asd2');
   });
+
+  // it('#3: set up response depending on query params GET request', async () => {
+  //   Nock.getPetById({ petId: 1 }).reply(200, { s: 'a' });
+  //   const result = await QueryFactory.Query.Client.getPetById(1);
+  //   expect(result.id).toBe(2);
+  // });
 });
 
 describe('interceptor removal tests', () => {
@@ -172,12 +167,14 @@ describe('interceptor removal tests', () => {
   });
 
   it('interceptor exist, add another interceptor with removePreviousInterceptors set to false - first interceptor is still used', async () => {
-    Nock.getPetByIdReply({ petId: 1 }, new Pet({ id: 2 } as any)).persist();
-    Nock.getPetByIdReply(
-      { petId: 1 },
-      new Pet({ id: 3 } as any),
-      false,
-    ).persist();
+    Nock.getPetById({ petId: 1 })
+      .reply(200, { id: 2, name: 'asd', photoUrls: [] })
+      .persist();
+    Nock.getPetById({ petId: 1 }, undefined, {
+      preservePreviousInterceptors: true,
+    })
+      .reply(200, { id: 3, name: '3', photoUrls: [] })
+      .persist();
 
     const { result, waitFor } = renderHook(
       () => QueryFactory.Query.useGetPetByIdQuery(1),
@@ -193,14 +190,12 @@ describe('interceptor removal tests', () => {
   });
 
   it('interceptor exist, add another interceptor with removePreviousInterceptors set to true - second interceptor is still used', async () => {
-    Nock.getPetByIdReply(
-      { petId: 1 },
-      { id: 4, photoUrls: [], name: 'a' },
-    ).persist();
-    Nock.getPetByIdReply(
-      { petId: 1 },
-      { id: 5, photoUrls: [], name: 'a' },
-    ).persist();
+    Nock.getPetById({ petId: 1 })
+      .reply(200, { id: 4, photoUrls: [], name: 'a' })
+      .persist();
+    Nock.getPetById({ petId: 1 })
+      .reply(200, { id: 5, photoUrls: [], name: 'a' })
+      .persist();
 
     const { result, waitFor } = renderHook(
       () => QueryFactory.Query.useGetPetByIdQuery(1),
