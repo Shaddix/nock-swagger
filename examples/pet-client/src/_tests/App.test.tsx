@@ -55,6 +55,20 @@ test('get with query params', async () => {
   });
 });
 
+describe('POST/PUT tests', () => {
+  it('POST', () => {
+    //Nock.addPet({});
+    // Nock.placeOrderReply();
+    // Nock.updatePet();
+    // QueryFactory.Query.Client.addPet(
+    //   new Pet({
+    //     name: 'asd',
+    //     photoUrls: ['123'],
+    //   }),
+    // );
+  });
+});
+
 describe('interceptor removal tests', () => {
   const queryClient = new QueryClient();
   const wrapper = ({ children }: any) => (
@@ -109,13 +123,6 @@ describe('interceptor removal tests', () => {
     expect(result.current.data!.id).toBe(5);
   });
 });
-
-function useFetchDataManual() {
-  return useQuery('fetchData', async () => {
-    const response = await fetch('http://localhost/api/data?a=1&b=2');
-    return await response.json();
-  });
-}
 
 test('test url builder', () => {
   const tags = [1, 2];

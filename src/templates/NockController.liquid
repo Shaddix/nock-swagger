@@ -8,10 +8,11 @@
 {%- assign firstLetter = operation.ActualOperationName | slice: 0, 1 | upcase -%}
 {%- assign parameterClassName = operation.ActualOperationName | append: 'q' | slice: 1, operation.ActualOperationName.size | prepend: firstLetter | slice: 0, operation.ActualOperationName.size | append: NockClassName | append: 'Parameters' -%}
 type {{ parameterClassName }} = {
-  {%- for parameter in operation.Parameters -%}
-    {%- if parameter.Type != 'FileParameter' -%}
+  {%- for parameter in operation.QueryParameters -%}
   {{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }};
-    {%- endif -%}
+  {%- endfor -%}
+  {%- for parameter in operation.PathParameters -%}
+    {{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }};
   {%- endfor -%}
 };
 
@@ -20,7 +21,7 @@ type {{ parameterClassName }} = {
 
 export const {{ NockClassName }} = {
 {%- for operation in Operations -%}
-{%- if operation.HttpMethodUpper == 'Get' or operation.HttpMethodUpper == 'Post' or operation.HttpMethodUpper == 'Put' -%}
+{%- if operation.HttpMethodUpper == 'Get' or operation.HttpMethodUpper == 'Post' or operation.HttpMethodUpper == 'Put' or operation.HttpMethodUpper == 'Patch' or operation.HttpMethodUpper == 'Delete' -%}
   {%- assign ResultType = operation.ResultType -%}
   {%- assign UseInterfaceResult = false -%}
   {%- if ResultType != 'string' and ResultType != 'number' and ResultType != 'boolean' and ResultType != 'Date' and ResultType != 'void' -%}
