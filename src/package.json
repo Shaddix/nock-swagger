@@ -1,6 +1,6 @@
 {
   "name": "nock-swagger",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Generates strongly type nock methods for your API based on Swagger/OpenAPI definition",
   "author": "Artur Drobinskiy",
   "license": "MIT",
