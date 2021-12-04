@@ -1,4 +1,9 @@
 # nock-swagger
+<p>
+<a href="https://www.npmjs.com/package/nock-swagger"><img src="https://img.shields.io/npm/v/nock-swagger.svg" alt="Stable Release" /></a>
+<a href="./LICENSE"><img allt="MIT License" src="https://badgen.now.sh/badge/license/MIT"/></a>
+</p>
+
 This projects autogenerates strongly typed methods to easily set up [nock](https://github.com/nock/nock) mocks for API calls based on Swagger API definitions.
 So, given that you have a [petstore-like API definition](https://petstore.swagger.io/), you could autogenerate a list of [nock helper methods](https://github.com/Shaddix/nock-swagger/blob/master/examples/pet-client/src/_tests/nock-helpers.ts), to easily mock methods from the API.
 
