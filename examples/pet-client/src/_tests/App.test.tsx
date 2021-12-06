@@ -183,6 +183,22 @@ describe('GET with reply based on parameters', () => {
     expect(result2.id).toBe(4);
   });
 
+  it('#3: any querystring param GET request', async () => {
+    Nock.findPetsByStatus({})
+      .reply(200, (uri, body) => {
+        return [
+          {
+            name: uri,
+          },
+        ];
+      })
+      .persist();
+    const result = await QueryFactory.Query.Client.findPetsByStatus([
+      Status.Available,
+    ]);
+    expect(result[0].name).toBe('/pet/findByStatus?status=available');
+  });
+
   it('#3: set up response depending on body POST request', async () => {
     Nock.placeOrder()
       .reply(200, (uri, body) => {
