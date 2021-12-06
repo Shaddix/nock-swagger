@@ -136,6 +136,27 @@ export const {{ NockClassName }} = {
       return interceptor as any;
   },
 
+  parse{{ operation.ActualOperationNameUpper }}Url(url: string) {
+{%- if operation.PathParameters.size > 0 -%}
+    let regex = "/{{ operation.Path }}([?]|$)";
+{%- for parameter in operation.PathParameters -%}
+    regex = regex.replace("{{ "{" }}{{ parameter.Name }}}", "(?<{{ parameter.Name }}>.*?)");
+{%- endfor -%}
+    const match = new RegExp(regex).exec(url);
+{%- endif -%}
+{%- if operation.QueryParameters.size > 0 -%}
+    const parsedUrl= new URL(url);
+{%- endif -%}
+    return {
+{%- for parameter in operation.PathParameters -%}
+      {{ parameter.Name }}: match?.groups?.['{{ parameter.Name }}'],
+{%- endfor -%}
+{%- for parameter in operation.QueryParameters -%}
+      {{ parameter.Name }}: parsedUrl.searchParams.get('{{ parameter.Name }}'),
+{%- endfor -%}
+    };
+  },
+
 
 {% endif -%}
 {% endfor -%}

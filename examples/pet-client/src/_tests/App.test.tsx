@@ -7,6 +7,7 @@ import nock from 'nock';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { QueryFactory } from '../api';
 import { Order, Status } from '../api/axios-client';
+import exp from 'constants';
 
 beforeEach(() => {
   nock.cleanAll();
@@ -255,22 +256,29 @@ describe('interceptor removal tests', () => {
   });
 });
 
-test('test url builder', () => {
-  const tags = [1, 2];
-  const getUrl = function (this: { baseUrl: string }) {
-    let url_ = this.baseUrl + '/pet/findByTags?';
-    if (tags === undefined || tags === null)
-      throw new Error(
-        "The parameter 'tags' must be defined and cannot be null.",
-      );
-    else
-      tags &&
-        tags.forEach((item) => {
-          url_ += 'tags=' + encodeURIComponent('' + item) + '&';
-        });
-    url_ = url_.replace(/[?&]$/, '');
-    return url_;
-  }.bind({ baseUrl: '' });
-  const url = getUrl();
-  expect(url).toBe('/pet/findByTags?tags=1&tags=2');
+describe('parse url tests', () => {
+  test('no queryparams', () => {
+    const parsed = Nock.parseGetPetByIdUrl('http://mail.ru/pet/1');
+    expect(parsed.petId).toBe('1');
+  });
+  test('template without queryparams, url contains them', () => {
+    const parsed = Nock.parseGetPetByIdUrl('http://mail.ru/pet/12?asd=qwe');
+    expect(parsed.petId).toBe('12');
+  });
+  test('with queryparams', () => {
+    const parsed = Nock.parseFindPetsByStatusUrl('http://mail.ru/?status=123');
+    expect(parsed.status).toBe('123');
+  });
+  test('with queryparams - no parameter', () => {
+    const parsed = Nock.parseFindPetsByStatusUrl('http://mail.ru/');
+    expect(parsed.status).toBeNull();
+  });
+
+  test('with queryparams - array', () => {
+    const parsed = Nock.parseFindPetsByStatusUrl(
+      'http://mail.ru/?status=1&status=2',
+    );
+    // this is not perfect actually. URL parsing will be moved to query-string someday
+    expect(parsed.status).toBe('1');
+  });
 });

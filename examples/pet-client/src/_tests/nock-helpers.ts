@@ -124,6 +124,15 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parseUploadFileUrl(url: string) {
+    let regex = '/pet/{petId}/uploadImage([?]|$)';
+    regex = regex.replace('{petId}', '(?<petId>.*?)');
+    const match = new RegExp(regex).exec(url);
+    return {
+      petId: match?.groups?.['petId'],
+    };
+  },
+
   /**
    * Add a new pet to the store
    */
@@ -193,6 +202,10 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parseAddPetUrl(url: string) {
+    return {};
+  },
+
   /**
    * Update an existing pet
    */
@@ -260,6 +273,10 @@ export const Nock = {
       removeInterceptor(interceptor);
     }
     return interceptor as any;
+  },
+
+  parseUpdatePetUrl(url: string) {
+    return {};
   },
 
   /**
@@ -334,6 +351,13 @@ export const Nock = {
       removeInterceptor(interceptor);
     }
     return interceptor as any;
+  },
+
+  parseFindPetsByStatusUrl(url: string) {
+    const parsedUrl = new URL(url);
+    return {
+      status: parsedUrl.searchParams.get('status'),
+    };
   },
 
   /**
@@ -411,6 +435,13 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parseFindPetsByTagsUrl(url: string) {
+    const parsedUrl = new URL(url);
+    return {
+      tags: parsedUrl.searchParams.get('tags'),
+    };
+  },
+
   /**
    * Find pet by ID
    */
@@ -478,6 +509,15 @@ export const Nock = {
       removeInterceptor(interceptor);
     }
     return interceptor as any;
+  },
+
+  parseGetPetByIdUrl(url: string) {
+    let regex = '/pet/{petId}([?]|$)';
+    regex = regex.replace('{petId}', '(?<petId>.*?)');
+    const match = new RegExp(regex).exec(url);
+    return {
+      petId: match?.groups?.['petId'],
+    };
   },
 
   /**
@@ -549,6 +589,15 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parseUpdatePetWithFormUrl(url: string) {
+    let regex = '/pet/{petId}([?]|$)';
+    regex = regex.replace('{petId}', '(?<petId>.*?)');
+    const match = new RegExp(regex).exec(url);
+    return {
+      petId: match?.groups?.['petId'],
+    };
+  },
+
   /**
    * Deletes a pet
    */
@@ -618,6 +667,15 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parseDeletePetUrl(url: string) {
+    let regex = '/pet/{petId}([?]|$)';
+    regex = regex.replace('{petId}', '(?<petId>.*?)');
+    const match = new RegExp(regex).exec(url);
+    return {
+      petId: match?.groups?.['petId'],
+    };
+  },
+
   /**
    * Returns pet inventories by status
    */
@@ -683,6 +741,10 @@ export const Nock = {
       removeInterceptor(interceptor);
     }
     return interceptor as any;
+  },
+
+  parseGetInventoryUrl(url: string) {
+    return {};
   },
 
   /**
@@ -754,6 +816,10 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parsePlaceOrderUrl(url: string) {
+    return {};
+  },
+
   /**
    * Find purchase order by ID
    */
@@ -821,6 +887,15 @@ export const Nock = {
       removeInterceptor(interceptor);
     }
     return interceptor as any;
+  },
+
+  parseGetOrderByIdUrl(url: string) {
+    let regex = '/store/order/{orderId}([?]|$)';
+    regex = regex.replace('{orderId}', '(?<orderId>.*?)');
+    const match = new RegExp(regex).exec(url);
+    return {
+      orderId: match?.groups?.['orderId'],
+    };
   },
 
   /**
@@ -892,6 +967,15 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parseDeleteOrderUrl(url: string) {
+    let regex = '/store/order/{orderId}([?]|$)';
+    regex = regex.replace('{orderId}', '(?<orderId>.*?)');
+    const match = new RegExp(regex).exec(url);
+    return {
+      orderId: match?.groups?.['orderId'],
+    };
+  },
+
   /**
    * Creates list of users with given input array
    */
@@ -961,6 +1045,10 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parseCreateUsersWithListInputUrl(url: string) {
+    return {};
+  },
+
   /**
    * Get user by user name
    */
@@ -1028,6 +1116,15 @@ export const Nock = {
       removeInterceptor(interceptor);
     }
     return interceptor as any;
+  },
+
+  parseGetUserByNameUrl(url: string) {
+    let regex = '/user/{username}([?]|$)';
+    regex = regex.replace('{username}', '(?<username>.*?)');
+    const match = new RegExp(regex).exec(url);
+    return {
+      username: match?.groups?.['username'],
+    };
   },
 
   /**
@@ -1106,6 +1203,15 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parseUpdateUserUrl(url: string) {
+    let regex = '/user/{username}([?]|$)';
+    regex = regex.replace('{username}', '(?<username>.*?)');
+    const match = new RegExp(regex).exec(url);
+    return {
+      username: match?.groups?.['username'],
+    };
+  },
+
   /**
    * Delete user
    */
@@ -1173,6 +1279,15 @@ export const Nock = {
       removeInterceptor(interceptor);
     }
     return interceptor as any;
+  },
+
+  parseDeleteUserUrl(url: string) {
+    let regex = '/user/{username}([?]|$)';
+    regex = regex.replace('{username}', '(?<username>.*?)');
+    const match = new RegExp(regex).exec(url);
+    return {
+      username: match?.groups?.['username'],
+    };
   },
 
   /**
@@ -1253,6 +1368,14 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parseLoginUserUrl(url: string) {
+    const parsedUrl = new URL(url);
+    return {
+      username: parsedUrl.searchParams.get('username'),
+      password: parsedUrl.searchParams.get('password'),
+    };
+  },
+
   /**
    * Logs out current logged in user session
    */
@@ -1313,6 +1436,10 @@ export const Nock = {
       removeInterceptor(interceptor);
     }
     return interceptor as any;
+  },
+
+  parseLogoutUserUrl(url: string) {
+    return {};
   },
 
   /**
@@ -1384,6 +1511,10 @@ export const Nock = {
     return interceptor as any;
   },
 
+  parseCreateUsersWithArrayInputUrl(url: string) {
+    return {};
+  },
+
   /**
    * Create user
    */
@@ -1451,6 +1582,10 @@ export const Nock = {
       removeInterceptor(interceptor);
     }
     return interceptor as any;
+  },
+
+  parseCreateUserUrl(url: string) {
+    return {};
   },
 };
 
