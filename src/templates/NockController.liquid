@@ -114,7 +114,7 @@ export const {{ NockClassName }} = {
 {%- elsif operation.HttpMethodUpper == 'Post' -%}post
 {%- elsif operation.HttpMethodUpper == 'Put' -%}put
 {%- elsif operation.HttpMethodUpper == 'Patch' -%}patch
-{%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(new RegExp('^' + url_), requestBody as RequestBodyMatcher, interceptorOptions){%- if operation.QueryParameters.size > 0 -%}
+{%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions){%- if operation.QueryParameters.size > 0 -%}
       .query({
 {%- for parameter in operation.QueryParameters -%}
           {{ parameter.VariableName }}: queryParams.{{ parameter.VariableName }} === null || queryParams.{{ parameter.VariableName }} === undefined ? /./
@@ -145,7 +145,7 @@ export const {{ NockClassName }} = {
     const match = new RegExp(regex).exec(url);
 {%- endif -%}
 {%- if operation.QueryParameters.size > 0 -%}
-    const parsedUrl= new URL(url);
+    const parsedUrl= new URL('http://localhost' + url);
 {%- endif -%}
     return {
 {%- for parameter in operation.PathParameters -%}

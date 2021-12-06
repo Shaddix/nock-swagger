@@ -83,7 +83,7 @@ export const ProductNock = {
   } => {
     let url_ = '/api/products';
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -148,7 +148,7 @@ export const ProductNock = {
     let url_ = '/api/products';
     const interceptor = nock(getBaseUrl())
       .delete(
-        new RegExp('^' + url_),
+        new RegExp('^' + url_ + '([?]|$)'),
         requestBody as RequestBodyMatcher,
         interceptorOptions,
       )
@@ -167,7 +167,7 @@ export const ProductNock = {
   },
 
   parseDeleteUrl(url: string) {
-    const parsedUrl = new URL(url);
+    const parsedUrl = new URL('http://localhost' + url);
     return {
       id: parsedUrl.searchParams.get('id'),
     };
@@ -233,7 +233,7 @@ export const ProductNock = {
     let url_ = '/api/products';
     const interceptor = nock(getBaseUrl())
       .get(
-        new RegExp('^' + url_),
+        new RegExp('^' + url_ + '([?]|$)'),
         requestBody as RequestBodyMatcher,
         interceptorOptions,
       )
@@ -283,7 +283,7 @@ export const ProductNock = {
   },
 
   parseSearchUrl(url: string) {
-    const parsedUrl = new URL(url);
+    const parsedUrl = new URL('http://localhost' + url);
     return {
       Search: parsedUrl.searchParams.get('Search'),
       ProductType: parsedUrl.searchParams.get('ProductType'),
@@ -357,9 +357,9 @@ export const ProductNock = {
     let url_ = '/api/products/{id}';
     if (queryParams.id !== null && queryParams.id !== undefined)
       url_ = url_.replace('{id}', encodeURIComponent('' + queryParams.id));
-    else url_ = url_.replace('{id}', '');
+    else url_ = url_.replace('{id}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).patch(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -434,9 +434,9 @@ export const ProductNock = {
     let url_ = '/api/products/{id}';
     if (queryParams.id !== null && queryParams.id !== undefined)
       url_ = url_.replace('{id}', encodeURIComponent('' + queryParams.id));
-    else url_ = url_.replace('{id}', '');
+    else url_ = url_.replace('{id}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -518,9 +518,9 @@ export const OidcConfigurationNock = {
         '{clientId}',
         encodeURIComponent('' + queryParams.clientId),
       );
-    else url_ = url_.replace('{clientId}', '');
+    else url_ = url_.replace('{clientId}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -590,7 +590,7 @@ export const SignUrlNock = {
   } => {
     let url_ = '/api/sign-url/signature';
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -653,7 +653,7 @@ export const SignUrlNock = {
   } => {
     let url_ = '/api/sign-url/signature/cookie';
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -721,7 +721,7 @@ export const TestDataNock = {
   } => {
     let url_ = '/error-test';
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -787,7 +787,7 @@ export const TestDataNock = {
   } => {
     let url_ = '/send-email';
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -860,7 +860,7 @@ export const TestDataNock = {
   } => {
     let url_ = '/patch';
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -926,7 +926,7 @@ export const TestDataNock = {
   } => {
     let url_ = '/formdata';
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -994,7 +994,7 @@ export const VersionNock = {
   } => {
     let url_ = '/api';
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );

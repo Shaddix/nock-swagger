@@ -5,9 +5,10 @@ import { mainRender } from './infrastructure';
 import { Category, Nock, Pet, PetStatus } from './nock-helpers';
 import nock from 'nock';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { QueryFactory } from '../api';
+import { QueryFactory, QueryFactory2 } from '../api';
 import { Order, Status } from '../api/axios-client';
 import exp from 'constants';
+import { ProductNock } from './nock-helpers2';
 
 beforeEach(() => {
   nock.cleanAll();
@@ -166,7 +167,7 @@ describe('GET with reply based on parameters', () => {
     expect(result.id).toBe(2);
   });
 
-  it('#3: set up response depending on query params GET request', async () => {
+  it('#3: set up response depending on query params GET request - advanced', async () => {
     Nock.getPetById({} as any)
       .reply(200, (uri, body) => {
         const petId = parseInt(uri.replace('/pet/', ''));
@@ -214,6 +215,25 @@ describe('GET with reply based on parameters', () => {
       }),
     );
     expect(result.id).toBe(124);
+  });
+
+  it('overlapping urls', async () => {
+    ProductNock.search({}).reply(200, (uri, body) => {
+      return [
+        {
+          title: 'oo',
+        },
+      ];
+    });
+    ProductNock.get({ id: 1 }).reply(200, (uri, body) => {
+      return {
+        title: '123',
+      };
+    });
+    const e = nock.pendingMocks();
+    console.log(e);
+    const result = await QueryFactory2.ProductQuery.Client.get(1);
+    expect(result.title).toBe('123');
   });
 });
 
@@ -296,5 +316,20 @@ describe('parse url tests', () => {
     );
     // this is not perfect actually. URL parsing will be moved to query-string someday
     expect(parsed.status).toBe('1');
+  });
+
+  it('integration test for parse url', async () => {
+    Nock.findPetsByStatus({})
+      .reply(200, (url) => {
+        const parsedUrl = Nock.parseFindPetsByStatusUrl(url);
+        return [{ id: 1, photoUrls: [], name: parsedUrl.status }];
+      })
+      .persist();
+
+    const result = await QueryFactory.Query.Client.findPetsByStatus([
+      Status.Available,
+    ]);
+
+    expect(result[0].name).toBe('available');
   });
 });

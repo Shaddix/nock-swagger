@@ -11,6 +11,6 @@ let url_ = "/{{ operation.Path }}";
     url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent("" + queryParams.{{ parameter.VariableName }}));
   {%     endif -%}
     else
-      url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", "");
+      url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", "[^/^?]*?");
 {% endfor -%}
 

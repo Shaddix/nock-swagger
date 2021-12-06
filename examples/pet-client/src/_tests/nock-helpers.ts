@@ -112,9 +112,9 @@ export const Nock = {
         '{petId}',
         encodeURIComponent('' + queryParams.petId),
       );
-    else url_ = url_.replace('{petId}', '');
+    else url_ = url_.replace('{petId}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -192,7 +192,7 @@ export const Nock = {
   } => {
     let url_ = '/pet';
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -265,7 +265,7 @@ export const Nock = {
   } => {
     let url_ = '/pet';
     const interceptor = nock(getBaseUrl()).put(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -333,7 +333,7 @@ export const Nock = {
     let url_ = '/pet/findByStatus';
     const interceptor = nock(getBaseUrl())
       .get(
-        new RegExp('^' + url_),
+        new RegExp('^' + url_ + '([?]|$)'),
         requestBody as RequestBodyMatcher,
         interceptorOptions,
       )
@@ -354,7 +354,7 @@ export const Nock = {
   },
 
   parseFindPetsByStatusUrl(url: string) {
-    const parsedUrl = new URL(url);
+    const parsedUrl = new URL('http://localhost' + url);
     return {
       status: parsedUrl.searchParams.get('status'),
     };
@@ -415,7 +415,7 @@ export const Nock = {
     let url_ = '/pet/findByTags';
     const interceptor = nock(getBaseUrl())
       .get(
-        new RegExp('^' + url_),
+        new RegExp('^' + url_ + '([?]|$)'),
         requestBody as RequestBodyMatcher,
         interceptorOptions,
       )
@@ -436,7 +436,7 @@ export const Nock = {
   },
 
   parseFindPetsByTagsUrl(url: string) {
-    const parsedUrl = new URL(url);
+    const parsedUrl = new URL('http://localhost' + url);
     return {
       tags: parsedUrl.searchParams.get('tags'),
     };
@@ -499,9 +499,9 @@ export const Nock = {
         '{petId}',
         encodeURIComponent('' + queryParams.petId),
       );
-    else url_ = url_.replace('{petId}', '');
+    else url_ = url_.replace('{petId}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -577,9 +577,9 @@ export const Nock = {
         '{petId}',
         encodeURIComponent('' + queryParams.petId),
       );
-    else url_ = url_.replace('{petId}', '');
+    else url_ = url_.replace('{petId}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -655,9 +655,9 @@ export const Nock = {
         '{petId}',
         encodeURIComponent('' + queryParams.petId),
       );
-    else url_ = url_.replace('{petId}', '');
+    else url_ = url_.replace('{petId}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).delete(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -733,7 +733,7 @@ export const Nock = {
   } => {
     let url_ = '/store/inventory';
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -806,7 +806,7 @@ export const Nock = {
   } => {
     let url_ = '/store/order';
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -877,9 +877,9 @@ export const Nock = {
         '{orderId}',
         encodeURIComponent('' + queryParams.orderId),
       );
-    else url_ = url_.replace('{orderId}', '');
+    else url_ = url_.replace('{orderId}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -955,9 +955,9 @@ export const Nock = {
         '{orderId}',
         encodeURIComponent('' + queryParams.orderId),
       );
-    else url_ = url_.replace('{orderId}', '');
+    else url_ = url_.replace('{orderId}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).delete(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -1035,7 +1035,7 @@ export const Nock = {
   } => {
     let url_ = '/user/createWithList';
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -1106,9 +1106,9 @@ export const Nock = {
         '{username}',
         encodeURIComponent('' + queryParams.username),
       );
-    else url_ = url_.replace('{username}', '');
+    else url_ = url_.replace('{username}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -1191,9 +1191,9 @@ export const Nock = {
         '{username}',
         encodeURIComponent('' + queryParams.username),
       );
-    else url_ = url_.replace('{username}', '');
+    else url_ = url_.replace('{username}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).put(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -1269,9 +1269,9 @@ export const Nock = {
         '{username}',
         encodeURIComponent('' + queryParams.username),
       );
-    else url_ = url_.replace('{username}', '');
+    else url_ = url_.replace('{username}', '[^/^?]*?');
     const interceptor = nock(getBaseUrl()).delete(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -1344,7 +1344,7 @@ export const Nock = {
     let url_ = '/user/login';
     const interceptor = nock(getBaseUrl())
       .get(
-        new RegExp('^' + url_),
+        new RegExp('^' + url_ + '([?]|$)'),
         requestBody as RequestBodyMatcher,
         interceptorOptions,
       )
@@ -1369,7 +1369,7 @@ export const Nock = {
   },
 
   parseLoginUserUrl(url: string) {
-    const parsedUrl = new URL(url);
+    const parsedUrl = new URL('http://localhost' + url);
     return {
       username: parsedUrl.searchParams.get('username'),
       password: parsedUrl.searchParams.get('password'),
@@ -1428,7 +1428,7 @@ export const Nock = {
   } => {
     let url_ = '/user/logout';
     const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -1501,7 +1501,7 @@ export const Nock = {
   } => {
     let url_ = '/user/createWithArray';
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
@@ -1574,7 +1574,7 @@ export const Nock = {
   } => {
     let url_ = '/user';
     const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_),
+      new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
     );
