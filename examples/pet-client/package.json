@@ -27,10 +27,10 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "generate-react-query": "react-query-swagger /runtime:Net50 /input:https://petstore.swagger.io/v2/swagger.json /output:src/api/axios-client.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined",
-    "generate-react-query2": "react-query-swagger /runtime:Net50 /input:https://template.mcc-tomsk.de/swagger/v1/swagger.json /output:src/api/axios-client2.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined",
-    "generate-nock": "nock-swagger /runtime:Net50 /input:https://petstore.swagger.io/v2/swagger.json /output:src/_tests/nock-helpers.ts",
-    "generate-nock2": "nock-swagger /runtime:Net50 /input:https://template.mcc-tomsk.de/swagger/v1/swagger.json /output:src/_tests/nock-helpers2.ts",
+    "generate-react-query": "react-query-swagger /runtime:Net60 /input:https://petstore.swagger.io/v2/swagger.json /output:src/api/axios-client.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined",
+    "generate-react-query2": "react-query-swagger /runtime:Net60 /input:https://template.mcc-tomsk.de/swagger/v1/swagger.json /output:src/api/axios-client2.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /markOptionalProperties:true /generateOptionalParameters:true /nullValue:undefined",
+    "generate-nock": "nock-swagger /runtime:Net60 /input:https://petstore.swagger.io/v2/swagger.json /output:src/_tests/nock-helpers.ts",
+    "generate-nock2": "nock-swagger /runtime:Net60 /input:https://template.mcc-tomsk.de/swagger/v1/swagger.json /output:src/_tests/nock-helpers2.ts",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false --forceExit --silent",

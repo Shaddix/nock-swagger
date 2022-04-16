@@ -119,11 +119,15 @@ export const {{ NockClassName }} = {
 {%- for parameter in operation.QueryParameters -%}
           {{ parameter.VariableName }}: queryParams.{{ parameter.VariableName }} === null || queryParams.{{ parameter.VariableName }} === undefined ? /./
             : queryParams.{{ parameter.VariableName }} instanceof RegExp ? queryParams.{{ parameter.VariableName }} :
-{%-     if parameter.IsDateOrDateTimeArray -%}
+{%-     if parameter.IsDateArray -%}
+        queryParams.{{ parameter.VariableName }}.length > 1 ? queryParams.{{ parameter.VariableName }}.map(item_ => encodeURIComponent(item_ ? "" + formatDate(item_) : "null")) : encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
+{%-     elsif parameter.IsDateOrDateTimeArray -%}
           queryParams.{{ parameter.VariableName }}.length > 1 ? queryParams.{{ parameter.VariableName }}.map(item_ => encodeURIComponent(item_ ? "" + item_.toJSON() : "null")) : encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
-{%-     elseif parameter.IsDateOrDateTime -%}
+{%-     elsif parameter.IsDate -%}
+    encodeURIComponent(formatDate(queryParams.{{ parameter.VariableName }}))
+{%-     elsif parameter.IsDateOrDateTime -%}
           encodeURIComponent(queryParams.{{ parameter.VariableName }}.toJSON())
-{%-     elseif parameter.IsArray -%}
+{%-     elsif parameter.IsArray -%}
           queryParams.{{ parameter.VariableName }}.length > 1 ? queryParams.{{ parameter.VariableName }}.map(item => encodeURIComponent("" + item)) : encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
 {%-     else -%}
           encodeURIComponent("" + queryParams.{{ parameter.VariableName }})

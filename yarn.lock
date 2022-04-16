@@ -7649,7 +7649,12 @@ npm-run-path@^4.0.0:
   dependencies:
     path-key "^3.0.0"
 
-nswag@13.14.8, nswag@^13.14.7:
+nswag@13.15.10:
+  version "13.15.10"
+  resolved "https://registry.yarnpkg.com/nswag/-/nswag-13.15.10.tgz#307a021cdc2fed17fe61817d6fe1c44a4b9935c8"
+  integrity sha512-gpKMDmpW6e0V/YgKvsieCRL30j8gl8KkJVUQ5htxhp8teet9U7x6CuR2EQEeFq0ruRlF9JijteHsysEqtRycSQ==
+
+nswag@^13.14.7:
   version "13.14.8"
   resolved "https://registry.yarnpkg.com/nswag/-/nswag-13.14.8.tgz#50722300c891ec9bd4c6cbfc4190b3a758359f96"
   integrity sha512-LJsD8fQ+S7209I0MTJ0PdKr8Vcv02s3TnvyW64vKIGC5JClwOVncljG5bOjtbdG7Y+oPVscjFUTwOzkfg6KbUA==

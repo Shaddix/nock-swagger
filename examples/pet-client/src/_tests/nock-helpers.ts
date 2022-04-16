@@ -677,77 +677,6 @@ export const Nock = {
   },
 
   /**
-   * Returns pet inventories by status
-   */
-  getInventory: (
-    requestBody?: RequestBodyMatcher,
-    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
-  ): Omit<Interceptor, 'reply'> & {
-    reply(
-      replyFnWithCallback: (
-        this: ReplyFnContext,
-        uri: string,
-        body: Body,
-        callback: (
-          err: NodeJS.ErrnoException | null,
-          result: ReplyFnResultGeneric<{ [key: string]: number }>,
-        ) => void,
-      ) => void,
-    ): Scope;
-    reply(
-      replyFn: (
-        this: ReplyFnContext,
-        uri: string,
-        body: Body,
-      ) =>
-        | ReplyFnResultGeneric<{ [key: string]: number }>
-        | Promise<ReplyFnResultGeneric<{ [key: string]: number }>>,
-    ): Scope;
-    reply(
-      statusCode: StatusCode,
-      replyBodyFnWithCallback: (
-        this: ReplyFnContext,
-        uri: string,
-        body: Body,
-        callback: (
-          err: NodeJS.ErrnoException | null,
-          result: { [key: string]: number },
-        ) => void,
-      ) => void,
-      headers?: ReplyHeaders,
-    ): Scope;
-    reply(
-      statusCode: StatusCode,
-      replyBodyFn: (
-        this: ReplyFnContext,
-        uri: string,
-        body: Body,
-      ) => { [key: string]: number } | Promise<{ [key: string]: number }>,
-      headers?: ReplyHeaders,
-    ): Scope;
-    reply(
-      responseCode?: StatusCode,
-      body?: { [key: string]: number },
-      headers?: ReplyHeaders,
-    ): Scope;
-  } => {
-    let url_ = '/store/inventory';
-    const interceptor = nock(getBaseUrl()).get(
-      new RegExp('^' + url_ + '([?]|$)'),
-      requestBody as RequestBodyMatcher,
-      interceptorOptions,
-    );
-    if (!interceptorOptions?.preservePreviousInterceptors) {
-      removeInterceptor(interceptor);
-    }
-    return interceptor as any;
-  },
-
-  parseGetInventoryUrl(url: string) {
-    return {};
-  },
-
-  /**
    * Place an order for a pet
    */
   placeOrder: (
@@ -974,6 +903,150 @@ export const Nock = {
     return {
       orderId: match?.groups?.['orderId'],
     };
+  },
+
+  /**
+   * Returns pet inventories by status
+   */
+  getInventory: (
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResultGeneric<{ [key: string]: number }>,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+      ) =>
+        | ReplyFnResultGeneric<{ [key: string]: number }>
+        | Promise<ReplyFnResultGeneric<{ [key: string]: number }>>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: { [key: string]: number },
+        ) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+      ) => { [key: string]: number } | Promise<{ [key: string]: number }>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: { [key: string]: number },
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
+    let url_ = '/store/inventory';
+    const interceptor = nock(getBaseUrl()).get(
+      new RegExp('^' + url_ + '([?]|$)'),
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
+  },
+
+  parseGetInventoryUrl(url: string) {
+    return {};
+  },
+
+  /**
+   * Creates list of users with given input array
+   */
+  createUsersWithArrayInput: (
+    requestBody?:
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | User[]
+      | ((body: User[]) => boolean),
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: User[],
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResultGeneric<void>,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: User[],
+      ) => ReplyFnResultGeneric<void> | Promise<ReplyFnResultGeneric<void>>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: User[],
+        callback: (err: NodeJS.ErrnoException | null, result: void) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: User[],
+      ) => void | Promise<void>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
+    let url_ = '/user/createWithArray';
+    const interceptor = nock(getBaseUrl()).post(
+      new RegExp('^' + url_ + '([?]|$)'),
+      requestBody as RequestBodyMatcher,
+      interceptorOptions,
+    );
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
+  },
+
+  parseCreateUsersWithArrayInputUrl(url: string) {
+    return {};
   },
 
   /**
@@ -1439,79 +1512,6 @@ export const Nock = {
   },
 
   parseLogoutUserUrl(url: string) {
-    return {};
-  },
-
-  /**
-   * Creates list of users with given input array
-   */
-  createUsersWithArrayInput: (
-    requestBody?:
-      | string
-      | Buffer
-      | RegExp
-      | DataMatcherArray
-      | DataMatcherMap
-      | User[]
-      | ((body: User[]) => boolean),
-    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
-  ): Omit<Interceptor, 'reply'> & {
-    reply(
-      replyFnWithCallback: (
-        this: ReplyFnContext,
-        uri: string,
-        body: User[],
-        callback: (
-          err: NodeJS.ErrnoException | null,
-          result: ReplyFnResultGeneric<void>,
-        ) => void,
-      ) => void,
-    ): Scope;
-    reply(
-      replyFn: (
-        this: ReplyFnContext,
-        uri: string,
-        body: User[],
-      ) => ReplyFnResultGeneric<void> | Promise<ReplyFnResultGeneric<void>>,
-    ): Scope;
-    reply(
-      statusCode: StatusCode,
-      replyBodyFnWithCallback: (
-        this: ReplyFnContext,
-        uri: string,
-        body: User[],
-        callback: (err: NodeJS.ErrnoException | null, result: void) => void,
-      ) => void,
-      headers?: ReplyHeaders,
-    ): Scope;
-    reply(
-      statusCode: StatusCode,
-      replyBodyFn: (
-        this: ReplyFnContext,
-        uri: string,
-        body: User[],
-      ) => void | Promise<void>,
-      headers?: ReplyHeaders,
-    ): Scope;
-    reply(
-      responseCode?: StatusCode,
-      body?: void,
-      headers?: ReplyHeaders,
-    ): Scope;
-  } => {
-    let url_ = '/user/createWithArray';
-    const interceptor = nock(getBaseUrl()).post(
-      new RegExp('^' + url_ + '([?]|$)'),
-      requestBody as RequestBodyMatcher,
-      interceptorOptions,
-    );
-    if (!interceptorOptions?.preservePreviousInterceptors) {
-      removeInterceptor(interceptor);
-    }
-    return interceptor as any;
-  },
-
-  parseCreateUsersWithArrayInputUrl(url: string) {
     return {};
   },
 

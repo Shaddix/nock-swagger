@@ -7,6 +7,7 @@ type DeleteProductNockParameters = {
 type SearchProductNockParameters = {
   search?: string | null | undefined | RegExp;
   productType?: ProductType | null | undefined | RegExp;
+  lastStockUpdatedAt?: Date | null | undefined | RegExp;
   offset?: number | null | undefined | RegExp;
   limit?: number | null | undefined | RegExp;
   sortBy?: string | null | undefined | RegExp;
@@ -251,6 +252,13 @@ export const ProductNock = {
             : queryParams.productType instanceof RegExp
             ? queryParams.productType
             : encodeURIComponent('' + queryParams.productType),
+        lastStockUpdatedAt:
+          queryParams.lastStockUpdatedAt === null ||
+          queryParams.lastStockUpdatedAt === undefined
+            ? /./
+            : queryParams.lastStockUpdatedAt instanceof RegExp
+            ? queryParams.lastStockUpdatedAt
+            : encodeURIComponent(formatDate(queryParams.lastStockUpdatedAt)),
         offset:
           queryParams.offset === null || queryParams.offset === undefined
             ? /./
@@ -287,6 +295,7 @@ export const ProductNock = {
     return {
       Search: parsedUrl.searchParams.get('Search'),
       ProductType: parsedUrl.searchParams.get('ProductType'),
+      LastStockUpdatedAt: parsedUrl.searchParams.get('LastStockUpdatedAt'),
       Offset: parsedUrl.searchParams.get('Offset'),
       Limit: parsedUrl.searchParams.get('Limit'),
       SortBy: parsedUrl.searchParams.get('SortBy'),
@@ -456,16 +465,35 @@ export const ProductNock = {
   },
 };
 
-type GetClientRequestParametersOidcConfigurationNockParameters = {
-  clientId: string | null;
+type ExternalCallbackGETOpenIdAuthorizationNockParameters = {
+  remoteError?: string | null | undefined | RegExp;
+  originalQuery?: string | null | undefined | RegExp;
 };
 
-export const OidcConfigurationNock = {
-  /**
-   * Requests OIDC configuration for oAuth.
-   */
-  getClientRequestParameters: (
-    queryParams: GetClientRequestParametersOidcConfigurationNockParameters,
+type ExternalCallbackPOSTOpenIdAuthorizationNockParameters = {
+  remoteError?: string | null | undefined | RegExp;
+  originalQuery?: string | null | undefined | RegExp;
+};
+
+type AuthorizeGETOpenIdAuthorizationNockParameters = {
+  provider?: string | null | undefined | RegExp;
+  reauthenticateWithAnotherProviderIfAlreadyLoggedIn?:
+    | boolean
+    | undefined
+    | RegExp;
+};
+
+type AuthorizePOSTOpenIdAuthorizationNockParameters = {
+  provider?: string | null | undefined | RegExp;
+  reauthenticateWithAnotherProviderIfAlreadyLoggedIn?:
+    | boolean
+    | undefined
+    | RegExp;
+};
+
+export const OpenIdAuthorizationNock = {
+  externalCallbackGET: (
+    queryParams: ExternalCallbackGETOpenIdAuthorizationNockParameters,
     requestBody?: RequestBodyMatcher,
     interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
   ): Omit<Interceptor, 'reply'> & {
@@ -512,14 +540,363 @@ export const OidcConfigurationNock = {
       headers?: ReplyHeaders,
     ): Scope;
   } => {
-    let url_ = '/_configuration/{clientId}';
-    if (queryParams.clientId !== null && queryParams.clientId !== undefined)
-      url_ = url_.replace(
-        '{clientId}',
-        encodeURIComponent('' + queryParams.clientId),
-      );
-    else url_ = url_.replace('{clientId}', '[^/^?]*?');
-    const interceptor = nock(getBaseUrl()).get(
+    let url_ = '/connect/authorize/callback';
+    const interceptor = nock(getBaseUrl())
+      .get(
+        new RegExp('^' + url_ + '([?]|$)'),
+        requestBody as RequestBodyMatcher,
+        interceptorOptions,
+      )
+      .query({
+        remoteError:
+          queryParams.remoteError === null ||
+          queryParams.remoteError === undefined
+            ? /./
+            : queryParams.remoteError instanceof RegExp
+            ? queryParams.remoteError
+            : encodeURIComponent('' + queryParams.remoteError),
+        originalQuery:
+          queryParams.originalQuery === null ||
+          queryParams.originalQuery === undefined
+            ? /./
+            : queryParams.originalQuery instanceof RegExp
+            ? queryParams.originalQuery
+            : encodeURIComponent('' + queryParams.originalQuery),
+      });
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
+  },
+
+  parseExternalCallbackGETUrl(url: string) {
+    const parsedUrl = new URL('http://localhost' + url);
+    return {
+      remoteError: parsedUrl.searchParams.get('remoteError'),
+      originalQuery: parsedUrl.searchParams.get('originalQuery'),
+    };
+  },
+
+  externalCallbackPOST: (
+    queryParams: ExternalCallbackPOSTOpenIdAuthorizationNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResultGeneric<void>,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+      ) => ReplyFnResultGeneric<void> | Promise<ReplyFnResultGeneric<void>>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+        callback: (err: NodeJS.ErrnoException | null, result: void) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+      ) => void | Promise<void>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
+    let url_ = '/connect/authorize/callback';
+    const interceptor = nock(getBaseUrl())
+      .post(
+        new RegExp('^' + url_ + '([?]|$)'),
+        requestBody as RequestBodyMatcher,
+        interceptorOptions,
+      )
+      .query({
+        remoteError:
+          queryParams.remoteError === null ||
+          queryParams.remoteError === undefined
+            ? /./
+            : queryParams.remoteError instanceof RegExp
+            ? queryParams.remoteError
+            : encodeURIComponent('' + queryParams.remoteError),
+        originalQuery:
+          queryParams.originalQuery === null ||
+          queryParams.originalQuery === undefined
+            ? /./
+            : queryParams.originalQuery instanceof RegExp
+            ? queryParams.originalQuery
+            : encodeURIComponent('' + queryParams.originalQuery),
+      });
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
+  },
+
+  parseExternalCallbackPOSTUrl(url: string) {
+    const parsedUrl = new URL('http://localhost' + url);
+    return {
+      remoteError: parsedUrl.searchParams.get('remoteError'),
+      originalQuery: parsedUrl.searchParams.get('originalQuery'),
+    };
+  },
+
+  authorizeGET: (
+    queryParams: AuthorizeGETOpenIdAuthorizationNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResultGeneric<void>,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+      ) => ReplyFnResultGeneric<void> | Promise<ReplyFnResultGeneric<void>>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+        callback: (err: NodeJS.ErrnoException | null, result: void) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+      ) => void | Promise<void>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
+    let url_ = '/connect/authorize';
+    const interceptor = nock(getBaseUrl())
+      .get(
+        new RegExp('^' + url_ + '([?]|$)'),
+        requestBody as RequestBodyMatcher,
+        interceptorOptions,
+      )
+      .query({
+        provider:
+          queryParams.provider === null || queryParams.provider === undefined
+            ? /./
+            : queryParams.provider instanceof RegExp
+            ? queryParams.provider
+            : encodeURIComponent('' + queryParams.provider),
+        reauthenticateWithAnotherProviderIfAlreadyLoggedIn:
+          queryParams.reauthenticateWithAnotherProviderIfAlreadyLoggedIn ===
+            null ||
+          queryParams.reauthenticateWithAnotherProviderIfAlreadyLoggedIn ===
+            undefined
+            ? /./
+            : queryParams.reauthenticateWithAnotherProviderIfAlreadyLoggedIn instanceof
+              RegExp
+            ? queryParams.reauthenticateWithAnotherProviderIfAlreadyLoggedIn
+            : encodeURIComponent(
+                '' +
+                  queryParams.reauthenticateWithAnotherProviderIfAlreadyLoggedIn,
+              ),
+      });
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
+  },
+
+  parseAuthorizeGETUrl(url: string) {
+    const parsedUrl = new URL('http://localhost' + url);
+    return {
+      provider: parsedUrl.searchParams.get('provider'),
+      reauthenticateWithAnotherProviderIfAlreadyLoggedIn:
+        parsedUrl.searchParams.get(
+          'reauthenticateWithAnotherProviderIfAlreadyLoggedIn',
+        ),
+    };
+  },
+
+  authorizePOST: (
+    queryParams: AuthorizePOSTOpenIdAuthorizationNockParameters,
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResultGeneric<void>,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+      ) => ReplyFnResultGeneric<void> | Promise<ReplyFnResultGeneric<void>>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+        callback: (err: NodeJS.ErrnoException | null, result: void) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+      ) => void | Promise<void>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
+    let url_ = '/connect/authorize';
+    const interceptor = nock(getBaseUrl())
+      .post(
+        new RegExp('^' + url_ + '([?]|$)'),
+        requestBody as RequestBodyMatcher,
+        interceptorOptions,
+      )
+      .query({
+        provider:
+          queryParams.provider === null || queryParams.provider === undefined
+            ? /./
+            : queryParams.provider instanceof RegExp
+            ? queryParams.provider
+            : encodeURIComponent('' + queryParams.provider),
+        reauthenticateWithAnotherProviderIfAlreadyLoggedIn:
+          queryParams.reauthenticateWithAnotherProviderIfAlreadyLoggedIn ===
+            null ||
+          queryParams.reauthenticateWithAnotherProviderIfAlreadyLoggedIn ===
+            undefined
+            ? /./
+            : queryParams.reauthenticateWithAnotherProviderIfAlreadyLoggedIn instanceof
+              RegExp
+            ? queryParams.reauthenticateWithAnotherProviderIfAlreadyLoggedIn
+            : encodeURIComponent(
+                '' +
+                  queryParams.reauthenticateWithAnotherProviderIfAlreadyLoggedIn,
+              ),
+      });
+    if (!interceptorOptions?.preservePreviousInterceptors) {
+      removeInterceptor(interceptor);
+    }
+    return interceptor as any;
+  },
+
+  parseAuthorizePOSTUrl(url: string) {
+    const parsedUrl = new URL('http://localhost' + url);
+    return {
+      provider: parsedUrl.searchParams.get('provider'),
+      reauthenticateWithAnotherProviderIfAlreadyLoggedIn:
+        parsedUrl.searchParams.get(
+          'reauthenticateWithAnotherProviderIfAlreadyLoggedIn',
+        ),
+    };
+  },
+
+  exchange: (
+    requestBody?: RequestBodyMatcher,
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean },
+  ): Omit<Interceptor, 'reply'> & {
+    reply(
+      replyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          result: ReplyFnResultGeneric<void>,
+        ) => void,
+      ) => void,
+    ): Scope;
+    reply(
+      replyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+      ) => ReplyFnResultGeneric<void> | Promise<ReplyFnResultGeneric<void>>,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFnWithCallback: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+        callback: (err: NodeJS.ErrnoException | null, result: void) => void,
+      ) => void,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      statusCode: StatusCode,
+      replyBodyFn: (
+        this: ReplyFnContext,
+        uri: string,
+        body: Body,
+      ) => void | Promise<void>,
+      headers?: ReplyHeaders,
+    ): Scope;
+    reply(
+      responseCode?: StatusCode,
+      body?: void,
+      headers?: ReplyHeaders,
+    ): Scope;
+  } => {
+    let url_ = '/connect/token';
+    const interceptor = nock(getBaseUrl()).post(
       new RegExp('^' + url_ + '([?]|$)'),
       requestBody as RequestBodyMatcher,
       interceptorOptions,
@@ -530,13 +907,8 @@ export const OidcConfigurationNock = {
     return interceptor as any;
   },
 
-  parseGetClientRequestParametersUrl(url: string) {
-    let regex = '/_configuration/{clientId}([?]|$)';
-    regex = regex.replace('{clientId}', '(?<clientId>.*?)');
-    const match = new RegExp(regex).exec(url);
-    return {
-      clientId: match?.groups?.['clientId'],
-    };
+  parseExchangeUrl(url: string) {
+    return {};
   },
 };
 
@@ -1180,6 +1552,7 @@ export class ProductDto implements IProductDto {
   id!: number;
   title!: string;
   productType!: ProductType;
+  lastStockUpdatedAt!: Date;
 
   constructor(data?: IProductDto) {
     if (data) {
@@ -1195,6 +1568,9 @@ export class ProductDto implements IProductDto {
       this.id = _data['id'];
       this.title = _data['title'];
       this.productType = _data['productType'];
+      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+        ? new Date(_data['lastStockUpdatedAt'].toString())
+        : <any>undefined;
     }
   }
 
@@ -1210,6 +1586,9 @@ export class ProductDto implements IProductDto {
     data['id'] = this.id;
     data['title'] = this.title;
     data['productType'] = this.productType;
+    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
+      ? formatDate(this.lastStockUpdatedAt)
+      : <any>undefined;
     return data;
   }
 }
@@ -1218,6 +1597,7 @@ export interface IProductDto {
   id: number;
   title: string;
   productType: ProductType;
+  lastStockUpdatedAt: Date;
 }
 
 export enum ProductType {
@@ -1230,6 +1610,7 @@ export enum ProductType {
 export class CreateProductDto implements ICreateProductDto {
   title!: string;
   productType!: ProductType;
+  lastStockUpdatedAt!: Date;
 
   constructor(data?: ICreateProductDto) {
     if (data) {
@@ -1244,6 +1625,9 @@ export class CreateProductDto implements ICreateProductDto {
     if (_data) {
       this.title = _data['title'];
       this.productType = _data['productType'];
+      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+        ? new Date(_data['lastStockUpdatedAt'].toString())
+        : <any>undefined;
     }
   }
 
@@ -1258,6 +1642,9 @@ export class CreateProductDto implements ICreateProductDto {
     data = typeof data === 'object' ? data : {};
     data['title'] = this.title;
     data['productType'] = this.productType;
+    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
+      ? formatDate(this.lastStockUpdatedAt)
+      : <any>undefined;
     return data;
   }
 }
@@ -1265,11 +1652,13 @@ export class CreateProductDto implements ICreateProductDto {
 export interface ICreateProductDto {
   title: string;
   productType: ProductType;
+  lastStockUpdatedAt: Date;
 }
 
 export class PatchProductDto implements IPatchProductDto {
   title?: string;
   productType?: ProductType;
+  lastStockUpdatedAt?: Date;
 
   constructor(data?: IPatchProductDto) {
     if (data) {
@@ -1284,6 +1673,9 @@ export class PatchProductDto implements IPatchProductDto {
     if (_data) {
       this.title = _data['title'];
       this.productType = _data['productType'];
+      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+        ? new Date(_data['lastStockUpdatedAt'].toString())
+        : <any>undefined;
     }
   }
 
@@ -1298,6 +1690,9 @@ export class PatchProductDto implements IPatchProductDto {
     data = typeof data === 'object' ? data : {};
     data['title'] = this.title;
     data['productType'] = this.productType;
+    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
+      ? formatDate(this.lastStockUpdatedAt)
+      : <any>undefined;
     return data;
   }
 }
@@ -1305,6 +1700,7 @@ export class PatchProductDto implements IPatchProductDto {
 export interface IPatchProductDto {
   title?: string;
   productType?: ProductType;
+  lastStockUpdatedAt?: Date;
 }
 
 export class PagedResultOfProductListItemDto
@@ -1363,6 +1759,7 @@ export class ProductListItemDto implements IProductListItemDto {
   id!: number;
   title!: string;
   productType!: ProductType;
+  lastStockUpdatedAt!: Date;
 
   constructor(data?: IProductListItemDto) {
     if (data) {
@@ -1378,6 +1775,9 @@ export class ProductListItemDto implements IProductListItemDto {
       this.id = _data['id'];
       this.title = _data['title'];
       this.productType = _data['productType'];
+      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+        ? new Date(_data['lastStockUpdatedAt'].toString())
+        : <any>undefined;
     }
   }
 
@@ -1393,6 +1793,9 @@ export class ProductListItemDto implements IProductListItemDto {
     data['id'] = this.id;
     data['title'] = this.title;
     data['productType'] = this.productType;
+    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
+      ? formatDate(this.lastStockUpdatedAt)
+      : <any>undefined;
     return data;
   }
 }
@@ -1401,6 +1804,7 @@ export interface IProductListItemDto {
   id: number;
   title: string;
   productType: ProductType;
+  lastStockUpdatedAt: Date;
 }
 
 export enum SortOrder {
@@ -1442,6 +1846,16 @@ export class TestPatchDto implements ITestPatchDto {
 
 export interface ITestPatchDto {
   value: string;
+}
+
+function formatDate(d: Date) {
+  return (
+    d.getFullYear() +
+    '-' +
+    (d.getMonth() < 9 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1) +
+    '-' +
+    (d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
+  );
 }
 
 import nock, {
