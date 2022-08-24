@@ -153,10 +153,10 @@ export const {{ NockClassName }} = {
 {%- endif -%}
     return {
 {%- for parameter in operation.PathParameters -%}
-      {{ parameter.Name }}: match?.groups?.['{{ parameter.Name }}'],
+      {{ parameter.Name | replace: ".", "_" }}: match?.groups?.['{{ parameter.Name }}'],
 {%- endfor -%}
 {%- for parameter in operation.QueryParameters -%}
-      {{ parameter.Name }}: parsedUrl.searchParams.get('{{ parameter.Name }}'),
+      {{ parameter.Name | replace: ".", "_" }}: parsedUrl.searchParams.get('{{ parameter.Name }}'),
 {%- endfor -%}
     };
   },

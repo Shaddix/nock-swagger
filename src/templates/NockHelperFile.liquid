@@ -39,3 +39,11 @@ type ReplyFnResultGeneric<T> =
   | readonly [StatusCode]
   | readonly [StatusCode, T]
   | readonly [StatusCode, T, ReplyHeaders];
+
+type IFileResponse = {
+    data: Blob;
+    status: number;
+    fileName?: string;
+    headers?: { [name: string]: any };
+};
+type Iany = any;
