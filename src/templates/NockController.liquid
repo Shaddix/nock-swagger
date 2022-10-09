@@ -28,9 +28,8 @@ export const {{ NockClassName }} = {
     {% if parameter.IsBody %}
       {%- assign BodyParameterName = parameter.VariableName -%}
       {%- assign BodyParameterType = parameter.Type | append: parameter.TypePostfix  -%}
-    {% endif %}
+    {%- endif -%}
   {%- endfor -%}
-
   {%- assign ResultType = operation.ResultType -%}
   {%- assign UseInterfaceResult = false -%}
   {%- if ResultType != 'string' and ResultType != 'number' and ResultType != 'boolean' and ResultType != 'Date' and ResultType != 'void' -%}
@@ -40,82 +39,83 @@ export const {{ NockClassName }} = {
       {%- assign OriginalResultType = ResultType -%}
       {%- assign ResultType = ResultType | prepend: 'I' -%}
       {%- assign UseInterfaceResult = true -%}
-    {%- endif %}
-  {%- endif %}
+    {%- endif -%}
+  {%- endif -%}
   {%- assign firstLetter = operation.ActualOperationName | slice: 0, 1 | upcase -%}
   {%- assign parameterClassName = operation.ActualOperationName | append: 'q' | slice: 1, operation.ActualOperationName.size | prepend: firstLetter | slice: 0, operation.ActualOperationName.size | append: NockClassName | append: 'Parameters' -%}
-
-  {% if operation.HasDocumentation -%}
+  {%- if operation.HasDocumentation %}
   /**
-  {%     if operation.HasSummary -%}
+  {%-     if operation.HasSummary -%}
    * {{ operation.Summary }}
-  {%     endif -%}
-  {%     if operation.IsDeprecated -%}
+  {%-     endif -%}
+  {%-     if operation.IsDeprecated -%}
    * @deprecated
-  {%     endif -%}
+  {%-     endif -%}
    */
-  {% endif -%}
-  {{ operation.ActualOperationName }}: (
-  {%- if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}queryParams: {{ parameterClassName }}, {%- endif -%}
-  requestBody?:  {%- if BodyParameterType != '' -%}
-    | string
-    | Buffer
-    | RegExp
-    | DataMatcherArray
-    | DataMatcherMap
-    | {{ BodyParameterType }}
-    | ((body: {{ BodyParameterType }}) => boolean),
-  {%- else -%}
-    RequestBodyMatcher,
   {%- endif -%}
-  interceptorOptions?: Options & { preservePreviousInterceptors?: boolean }) : Omit<Interceptor, 'reply'> & {
-	reply(
-      replyFnWithCallback: (
-        this: ReplyFnContext,
-        uri: string,
-        body: {{ BodyParameterType |  default: 'Body' }},
-        callback: (
-          err: NodeJS.ErrnoException | null,
-          result: ReplyFnResultGeneric<{{ ResultType }}>
+  {{ operation.ActualOperationName }}: (
+    {%- if operation.QueryParameters.size > 0 or operation.PathParameters.size > 0 -%}queryParams: {{ parameterClassName }},
+    {%- endif -%}
+    requestBody?: {%- if BodyParameterType != '' %}
+      | string
+      | Buffer
+      | RegExp
+      | DataMatcherArray
+      | DataMatcherMap
+      | {{ BodyParameterType }}
+      | ((body: {{ BodyParameterType }}) => boolean),
+  {%- else -%}RequestBodyMatcher,
+  {%- endif -%}
+    interceptorOptions?: Options & { preservePreviousInterceptors?: boolean }) : Omit<Interceptor, 'reply'> & {
+	    reply(
+        replyFnWithCallback: (
+          this: ReplyFnContext,
+          uri: string,
+          body: {{ BodyParameterType |  default: 'Body' }},
+          callback: (
+            err: NodeJS.ErrnoException | null,
+            result: ReplyFnResultGeneric<{{ ResultType }}>
+          ) => void
         ) => void
-      ) => void
-    ): Scope
-    reply(
-      replyFn: (
-        this: ReplyFnContext,
-        uri: string,
-        body: {{ BodyParameterType |  default: 'Body' }},
-      ) => ReplyFnResultGeneric<{{ ResultType }}> | Promise<ReplyFnResultGeneric<{{ ResultType }}>>
-    ): Scope
-    reply(
-      statusCode: StatusCode,
-      replyBodyFnWithCallback: (
-        this: ReplyFnContext,
-        uri: string,
-        body: {{ BodyParameterType |  default: 'Body' }},
-        callback: (err: NodeJS.ErrnoException | null, result: {{ ResultType }}) => void
-      ) => void,
-      headers?: ReplyHeaders
-    ): Scope
-    reply(
-      statusCode: StatusCode,
-      replyBodyFn: (
-        this: ReplyFnContext,
-        uri: string,
-        body: {{ BodyParameterType |  default: 'Body' }},
-      ) => {{ ResultType }} | Promise<{{ ResultType }}>,
-      headers?: ReplyHeaders
-    ): Scope
-    reply(responseCode?: StatusCode, body?: {{ ResultType }}, headers?: ReplyHeaders): Scope
-} => {
-    {% template Path %}
-    const interceptor = nock(getBaseUrl())
-      .{%- if operation.HttpMethodUpper == 'Get' -%}get
+      ): Scope
+      reply(
+        replyFn: (
+          this: ReplyFnContext,
+          uri: string,
+          body: {{ BodyParameterType |  default: 'Body' }},
+        ) => ReplyFnResultGeneric<{{ ResultType }}> | Promise<ReplyFnResultGeneric<{{ ResultType }}>>
+      ): Scope
+      reply(
+        statusCode: StatusCode,
+        replyBodyFnWithCallback: (
+          this: ReplyFnContext,
+          uri: string,
+          body: {{ BodyParameterType |  default: 'Body' }},
+          callback: (err: NodeJS.ErrnoException | null, result: {{ ResultType }}) => void
+        ) => void,
+        headers?: ReplyHeaders
+      ): Scope
+      reply(
+        statusCode: StatusCode,
+        replyBodyFn: (
+          this: ReplyFnContext,
+          uri: string,
+          body: {{ BodyParameterType |  default: 'Body' }},
+        ) => {{ ResultType }} | Promise<{{ ResultType }}>,
+        headers?: ReplyHeaders
+      ): Scope
+      reply(responseCode?: StatusCode, body?: {{ ResultType }}, headers?: ReplyHeaders): Scope
+    } => {
+      {% template Path %}
+
+      const interceptor = nock(getBaseUrl())
+        .{%- if operation.HttpMethodUpper == 'Get' -%}get
 {%- elsif operation.HttpMethodUpper == 'Post' -%}post
 {%- elsif operation.HttpMethodUpper == 'Put' -%}put
 {%- elsif operation.HttpMethodUpper == 'Patch' -%}patch
-{%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}(new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions){%- if operation.QueryParameters.size > 0 -%}
-      .query({
+{%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}
+        (new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions){%- if operation.QueryParameters.size > 0 -%}
+        .query({
 {%- for parameter in operation.QueryParameters -%}
           {{ parameter.VariableName }}: queryParams.{{ parameter.VariableName }} === null || queryParams.{{ parameter.VariableName }} === undefined ? /./
             : queryParams.{{ parameter.VariableName }} instanceof RegExp ? queryParams.{{ parameter.VariableName }} :
@@ -134,6 +134,7 @@ export const {{ NockClassName }} = {
 {%-     endif -%},
 {%- endfor -%}
       }){%- endif -%};
+
       if (!interceptorOptions?.preservePreviousInterceptors) {
         removeInterceptor(interceptor);
       }
@@ -159,10 +160,7 @@ export const {{ NockClassName }} = {
       {{ parameter.Name | replace: ".", "_" }}: parsedUrl.searchParams.get('{{ parameter.Name }}'),
 {%- endfor -%}
     };
-  },
-
-
-{% endif -%}
-{% endfor -%}
+  },{%- endif -%}
+{%- endfor -%}
 }
 {% endif -%}

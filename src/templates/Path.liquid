@@ -1,20 +1,20 @@
 let url_ = "/{{ operation.Path }}";
 {% for parameter in operation.PathParameters -%}
-    if (queryParams.{{ parameter.VariableName }} !== null && queryParams.{{ parameter.VariableName }} !== undefined)
-  {%     if parameter.IsDateArray -%}
+  if (queryParams.{{ parameter.VariableName }} !== null && queryParams.{{ parameter.VariableName }} !== undefined)
+  {%-     if parameter.IsDateArray -%}
     url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent(queryParams.{{ parameter.VariableName }}.map(s_ => s_ ? formatDate(s_) : "null").join()));
-  {%     elsif parameter.IsDateOrDateTimeArray -%}
+  {%-     elsif parameter.IsDateOrDateTimeArray -%}
     url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent(queryParams.{{ parameter.VariableName }}.map(s_ => s_ ? s_.toJSON() : "null").join()));
-    {%     elsif parameter.IsDate -%}
+    {%-     elsif parameter.IsDate -%}
     url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent(queryParams.{{ parameter.VariableName }} ? "" + formatDate(queryParams.{{ parameter.VariableName }}) : "null"));
-    {%     elsif parameter.IsDateOrDateTime -%}
+    {%-     elsif parameter.IsDateOrDateTime -%}
     url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent(queryParams.{{ parameter.VariableName }} ? "" + queryParams.{{ parameter.VariableName }}.toJSON() : "null"));
-    {%     elsif parameter.IsArray -%}
+    {%-     elsif parameter.IsArray -%}
     url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent(queryParams.{{ parameter.VariableName }}.join()));
-  {%     else -%}
+  {%-     else -%}
     url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", encodeURIComponent("" + queryParams.{{ parameter.VariableName }}));
-  {%     endif -%}
-    else
-      url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", "[^/^?]*?");
+  {%-     endif -%}
+  else
+    url_ = url_.replace("{{ "{" }}{{ parameter.Name }}}", "[^/^?]*?");
 {% endfor -%}
 
