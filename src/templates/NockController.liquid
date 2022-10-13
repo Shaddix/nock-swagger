@@ -114,23 +114,23 @@ export const {{ NockClassName }} = {
 {%- elsif operation.HttpMethodUpper == 'Put' -%}put
 {%- elsif operation.HttpMethodUpper == 'Patch' -%}patch
 {%- elsif operation.HttpMethodUpper == 'Delete' -%}delete{%- endif -%}
-        (new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions){%- if operation.QueryParameters.size > 0 -%}
+        (new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions){%- if operation.QueryParameters.size > 0 %}
         .query({
 {%- for parameter in operation.QueryParameters -%}
-          {{ parameter.VariableName }}: queryParams.{{ parameter.VariableName }} === null || queryParams.{{ parameter.VariableName }} === undefined ? /./
+          {{ parameter.Name }}: queryParams.{{ parameter.VariableName }} === null || queryParams.{{ parameter.VariableName }} === undefined ? /./
             : queryParams.{{ parameter.VariableName }} instanceof RegExp ? queryParams.{{ parameter.VariableName }} :
 {%-     if parameter.IsDateArray -%}
-        queryParams.{{ parameter.VariableName }}.length > 1 ? queryParams.{{ parameter.VariableName }}.map(item_ => encodeURIComponent(item_ ? "" + formatDate(item_) : "null")) : encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
+        queryParams.{{ parameter.VariableName }}.length > 1 ? queryParams.{{ parameter.VariableName }}.map(item_ => item_ ? "" + formatDate(item_) : "null") : queryParams.{{ parameter.VariableName }}
 {%-     elsif parameter.IsDateOrDateTimeArray -%}
-          queryParams.{{ parameter.VariableName }}.length > 1 ? queryParams.{{ parameter.VariableName }}.map(item_ => encodeURIComponent(item_ ? "" + item_.toJSON() : "null")) : encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
+          queryParams.{{ parameter.VariableName }}.length > 1 ? queryParams.{{ parameter.VariableName }}.map(item_ => item_ ? "" + item_.toISOString() : "null") : queryParams.{{ parameter.VariableName }}
 {%-     elsif parameter.IsDate -%}
-    encodeURIComponent(formatDate(queryParams.{{ parameter.VariableName }}))
+          formatDate(queryParams.{{ parameter.VariableName }})
 {%-     elsif parameter.IsDateOrDateTime -%}
-          encodeURIComponent(queryParams.{{ parameter.VariableName }}.toJSON())
+          queryParams.{{ parameter.VariableName }}.toISOString()
 {%-     elsif parameter.IsArray -%}
           queryParams.{{ parameter.VariableName }}.length > 1 ? queryParams.{{ parameter.VariableName }}.map(item => encodeURIComponent("" + item)) : encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
 {%-     else -%}
-          encodeURIComponent("" + queryParams.{{ parameter.VariableName }})
+          queryParams.{{ parameter.VariableName }}
 {%-     endif -%},
 {%- endfor -%}
       }){%- endif -%};

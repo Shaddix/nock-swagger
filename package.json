@@ -13,6 +13,8 @@
     "test-all": "yarn generate-nock && yarn generate-nock2 && yarn typecheck && yarn workspace pet-client test",
     "generate-react-query": "yarn workspace pet-client generate-react-query",
     "generate-react-query2": "yarn workspace pet-client generate-react-query2",
-    "generate-nock": "yarn workspace pet-client generate-nock"
+    "generate-nock-all": "yarn generate-nock && yarn generate-nock2",
+    "generate-nock": "yarn workspace pet-client generate-nock",
+    "generate-nock2": "yarn workspace pet-client generate-nock2"
   }
 }

@@ -7,11 +7,12 @@ import nock from 'nock';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { QueryFactory, QueryFactory2 } from '../api';
 import { Order, Status } from '../api/axios-client';
-import exp from 'constants';
-import { ProductNock } from './nock-helpers2';
+import { ProductNock, setBaseUrl as setBaseUrlNock2 } from './nock-helpers2';
 
 beforeEach(() => {
   nock.cleanAll();
+  QueryFactory2.setBaseUrl('http://localhost');
+  setBaseUrlNock2('http://localhost');
 });
 
 test('simple get without query params', async () => {
@@ -234,6 +235,34 @@ describe('GET with reply based on parameters', () => {
     console.log(e);
     const result = await QueryFactory2.ProductQuery.Client.get(1);
     expect(result.title).toBe('123');
+  });
+
+  it('date in url', async () => {
+    ProductNock.search({ lastStockUpdatedAt: new Date(2022, 1, 2) }).reply(
+      200,
+      {
+        totalCount: 1,
+        data: [{ title: 'oo' }],
+      } as any,
+    );
+    ProductNock.search(
+      { lastStockUpdatedAt: new Date(2022, 2, 2) },
+      undefined,
+      { preservePreviousInterceptors: true },
+    ).reply(200, {
+      totalCount: 1,
+      data: [{ title: '22' }],
+    } as any);
+    const e = nock.pendingMocks();
+    //throw new Error(JSON.stringify(e));
+    console.log(e);
+    const result = await QueryFactory2.ProductQuery.Client.search(
+      undefined,
+      undefined,
+      new Date(2022, 1, 2),
+    );
+    expect(result.totalCount).toBe(1);
+    expect(result.data[0].title).toBe('oo');
   });
 });
 

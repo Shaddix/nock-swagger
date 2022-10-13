@@ -25,5 +25,6 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off', // since in Electron we have to import styles with require
     '@typescript-eslint/no-use-before-define': 'off', // it's quite usual that we define helper functions somewhere at the bottom
     '@typescript-eslint/explicit-function-return-type': 'off', // we don't have a rule to specify return type for a function
+    '@typescript-eslint/no-explicit-any': 'off', // we don't have a rule to specify return type for a function
   },
 };

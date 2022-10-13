@@ -1583,6 +1583,18 @@
     "@svgr/plugin-svgo" "^5.4.0"
     loader-utils "^2.0.0"
 
+"@tanstack/query-persist-client-core@4.10.3":
+  version "4.10.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-persist-client-core/-/query-persist-client-core-4.10.3.tgz#c89fc6d6ca680ba505da334ff354ee00adbf3339"
+  integrity sha512-KGNnQdUW+eAedIzVM6zugeNpmEcrtJXzX66OQWc9WugpzHvUZE/13ZvUVxStvomUw9zeR+iMAWvBEiXJam4apQ==
+
+"@tanstack/react-query-persist-client@^4.2.0":
+  version "4.10.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query-persist-client/-/react-query-persist-client-4.10.3.tgz#c5927087c111a44b4d469a3e6b7906510e48a7bb"
+  integrity sha512-TKfRv5FibgpQu0yt//UDKnBueplqKwEK4MyCgfE/4mKVKYHSQsa8yq5bT/VbQlzbYnxmi0btCE/N6adeJ6wyug==
+  dependencies:
+    "@tanstack/query-persist-client-core" "4.10.3"
+
 "@testing-library/dom@^7.28.1":
   version "7.28.1"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.28.1.tgz#dea78be6e1e6db32ddcb29a449e94d9700c79eb9"
@@ -7649,15 +7661,10 @@ npm-run-path@^4.0.0:
   dependencies:
     path-key "^3.0.0"
 
-nswag@13.15.10:
-  version "13.15.10"
-  resolved "https://registry.yarnpkg.com/nswag/-/nswag-13.15.10.tgz#307a021cdc2fed17fe61817d6fe1c44a4b9935c8"
-  integrity sha512-gpKMDmpW6e0V/YgKvsieCRL30j8gl8KkJVUQ5htxhp8teet9U7x6CuR2EQEeFq0ruRlF9JijteHsysEqtRycSQ==
-
-nswag@^13.14.7:
-  version "13.14.8"
-  resolved "https://registry.yarnpkg.com/nswag/-/nswag-13.14.8.tgz#50722300c891ec9bd4c6cbfc4190b3a758359f96"
-  integrity sha512-LJsD8fQ+S7209I0MTJ0PdKr8Vcv02s3TnvyW64vKIGC5JClwOVncljG5bOjtbdG7Y+oPVscjFUTwOzkfg6KbUA==
+nswag@13.17.0, nswag@^13.17.0:
+  version "13.17.0"
+  resolved "https://registry.yarnpkg.com/nswag/-/nswag-13.17.0.tgz#9f27177e899bce6f9951ea96074311dc4ed07a1c"
+  integrity sha512-Av1qcXZEhTYnF9KXcv0NybvpYxZH/HtEB//Nes/IEAd0HSWkpdSYlZcx7Q1+mi0yFAI95sSlxSEI30SRib7RgA==
 
 nth-check@^1.0.2, nth-check@~1.0.1:
   version "1.0.2"
@@ -9185,17 +9192,18 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
 
-react-query-swagger@^13.14.7:
-  version "13.14.7"
-  resolved "https://registry.yarnpkg.com/react-query-swagger/-/react-query-swagger-13.14.7.tgz#dca2c433f820325659554a1fcb3159d645259d55"
-  integrity sha512-azxAsnVv6gCCSorUWE3Ay8yg8GLEUO3ie4APYciVzTjWMCEDD2xUT7JIcR2kif5twiavzcKLiLKVQzK/wVWitA==
+react-query-swagger@^14.4.4:
+  version "14.4.4"
+  resolved "https://registry.yarnpkg.com/react-query-swagger/-/react-query-swagger-14.4.4.tgz#97a8b72ac619c41daf1e8638e1c311899a7f4fa6"
+  integrity sha512-se0cZRu82bKvokHSWeYy4PdNSTEyW4CecQW6mb3YplcHMfNva92pJGh+HevAMPJVuHgeNLA8WBXB9/fUMyTMdw==
   dependencies:
-    nswag "^13.14.7"
+    "@tanstack/react-query-persist-client" "^4.2.0"
+    nswag "^13.17.0"
 
-react-query@^3.34.0:
-  version "3.34.0"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.34.0.tgz#43477ac6d117d850354e6db80dcca6d5c1b36728"
-  integrity sha512-g6L90FeCLzz6+53CbVKYJALBiZR5icOYPjqGGiNgHNeufcnddLZaQGE9wheclk10k6g+o+Dd4/jAtswhjVblXw==
+react-query@^3.39.2:
+  version "3.39.2"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.39.2.tgz#9224140f0296f01e9664b78ed6e4f69a0cc9216f"
+  integrity sha512-F6hYDKyNgDQfQOuR1Rsp3VRzJnWHx6aRnnIZHMNGGgbL3SBgpZTDg8MQwmxOgpCAoqZJA+JSNCydF1xGJqKOCA==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
@@ -10878,10 +10886,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.5.2:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.2.tgz#8ac1fba9f52256fdb06fb89e4122fa6a346c2998"
-  integrity sha512-5BlMof9H1yGt0P8/WF+wPNw6GfctgGjXp5hkblpyT+8rkASSmkUKMXrxR0Xg8ThVCi/JnHQiKXeBaEwCeQwMFw==
+typescript@^4.8.4:
+  version "4.8.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.4.tgz#c464abca159669597be5f96b8943500b238e60e6"
+  integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"

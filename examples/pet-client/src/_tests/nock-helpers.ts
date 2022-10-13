@@ -316,7 +316,8 @@ queryParams: FindPetsByStatusNockParameters,
 
       const interceptor = nock(getBaseUrl())
         .get
-        (new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions)        .query({
+        (new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions)
+        .query({
           status: queryParams.status === null || queryParams.status === undefined ? /./
             : queryParams.status instanceof RegExp ? queryParams.status :
           queryParams.status.length > 1 ? queryParams.status.map(item => encodeURIComponent("" + item)) : encodeURIComponent("" + queryParams.status)
@@ -386,7 +387,8 @@ queryParams: FindPetsByTagsNockParameters,
 
       const interceptor = nock(getBaseUrl())
         .get
-        (new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions)        .query({
+        (new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions)
+        .query({
           tags: queryParams.tags === null || queryParams.tags === undefined ? /./
             : queryParams.tags instanceof RegExp ? queryParams.tags :
           queryParams.tags.length > 1 ? queryParams.tags.map(item => encodeURIComponent("" + item)) : encodeURIComponent("" + queryParams.tags)
@@ -1288,14 +1290,15 @@ queryParams: LoginUserNockParameters,
 
       const interceptor = nock(getBaseUrl())
         .get
-        (new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions)        .query({
+        (new RegExp('^' + url_ + '([?]|$)'), requestBody as RequestBodyMatcher, interceptorOptions)
+        .query({
           username: queryParams.username === null || queryParams.username === undefined ? /./
             : queryParams.username instanceof RegExp ? queryParams.username :
-          encodeURIComponent("" + queryParams.username)
+          queryParams.username
 ,
           password: queryParams.password === null || queryParams.password === undefined ? /./
             : queryParams.password instanceof RegExp ? queryParams.password :
-          encodeURIComponent("" + queryParams.password)
+          queryParams.password
 ,
       });
 
